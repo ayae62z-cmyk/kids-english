@@ -426,11 +426,14 @@ function startMemoryGame() {
   memoryFlipped = [];
   memoryMatchedCount = 0;
 
+  // Pick 6 random items with rich visual emojis from animals and fruits
   const pool = [...ANIMALS_DATA, ...FRUITS_DATA].sort(() => 0.5 - Math.random()).slice(0, 6);
   const deck = [];
+  
+  // Create matching pairs - both cards have clear colorful pictures and words
   pool.forEach((item, idx) => {
-    deck.push({ id: idx, type: 'emoji', val: item.emoji, word: item.word });
-    deck.push({ id: idx, type: 'word', val: item.word, word: item.word });
+    deck.push({ id: idx, emoji: item.emoji, word: item.word, arabic: item.arabic });
+    deck.push({ id: idx, emoji: item.emoji, word: item.word, arabic: item.arabic });
   });
 
   deck.sort(() => 0.5 - Math.random());
@@ -440,7 +443,7 @@ function startMemoryGame() {
     const el = document.createElement('div');
     el.className = 'memory-card';
     el.dataset.index = i;
-    el.innerHTML = '❓';
+    el.innerHTML = '<span class="card-face-down">❓</span>';
     el.onclick = () => handleMemoryFlip(i, el);
     container.appendChild(el);
   });
@@ -454,7 +457,13 @@ function handleMemoryFlip(index, cardEl) {
   playPopSound();
   const cardData = memoryCards[index];
   cardEl.classList.add('flipped');
-  cardEl.innerHTML = cardData.val;
+  cardEl.innerHTML = `
+    <div class="card-content">
+      <span class="card-img">${cardData.emoji}</span>
+      <span class="card-word">${cardData.word}</span>
+      <span class="card-ar">${cardData.arabic}</span>
+    </div>
+  `;
 
   speakWord(cardData.word);
   memoryFlipped.push({ index, data: cardData, el: cardEl });
@@ -462,6 +471,7 @@ function handleMemoryFlip(index, cardEl) {
   if (memoryFlipped.length === 2) {
     const [c1, c2] = memoryFlipped;
     if (c1.data.id === c2.data.id) {
+      // Matched!
       setTimeout(() => {
         playCorrectSound();
         c1.el.classList.add('matched');
@@ -473,20 +483,21 @@ function handleMemoryFlip(index, cardEl) {
         if (memoryMatchedCount === 6) {
           playFanfareSound();
           setTimeout(() => {
-            showCelebration('بطل الذاكرة! 🏆', 'أكملت جميع بطاقات الذاكرة بنجاح مبهر!', 10);
+            showCelebration('بطل الذاكرة! 🏆', 'أكملت جميع بطاقات الذاكرة والصور بنجاح مبهر!', 10);
             startMemoryGame();
           }, 600);
         }
       }, 500);
     } else {
+      // Not matched
       setTimeout(() => {
         playWrongSound();
         c1.el.classList.remove('flipped');
-        c1.el.innerHTML = '❓';
+        c1.el.innerHTML = '<span class="card-face-down">❓</span>';
         c2.el.classList.remove('flipped');
-        c2.el.innerHTML = '❓';
+        c2.el.innerHTML = '<span class="card-face-down">❓</span>';
         memoryFlipped = [];
-      }, 1000);
+      }, 900);
     }
   }
 }
