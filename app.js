@@ -1,7 +1,7 @@
 /**
  * ==========================================================================
- * Kids English Explorer - Core Game Engine & Speech Synthesis
- * محرك التلعيب، النطق الصوتي التفاعلي، ونظام المكافآت
+ * LINGOBEE - Core Game Engine & Speech Synthesis
+ * منصة لينجوبي - محرك التلعيب، النطق الصوتي التفاعلي، ونظام المكافآت
  * ==========================================================================
  */
 
@@ -932,7 +932,7 @@ function downloadCertificateAsImage() {
   ctx.font = 'bold 22px Cairo, sans-serif';
   ctx.fillStyle = '#475569';
   ctx.textAlign = 'center';
-  ctx.fillText('🚀 KIDS ENGLISH EXPLORER - منصة مستكشف الإنجليزية للأطفال', 600, 105);
+  ctx.fillText('🐝 LINGOBEE - منصة لينجوبي لتعليم الإنجليزية للأطفال', 600, 105);
 
   // Medal Icon
   ctx.font = '50px sans-serif';
@@ -970,7 +970,7 @@ function downloadCertificateAsImage() {
   ctx.font = '600 20px Cairo, sans-serif';
   ctx.fillStyle = '#475569';
   ctx.fillText('تقديراً لشغفه الكبير وإتقانه أساسيات اللغة الإنجليزية، واجتياز التحديات والمحادثات والألعاب', 600, 500);
-  ctx.fillText('التفاعلية في منصة مستكشف الإنجليزية للأطفال بكل ذكاء وإبداع ومثابرة!', 600, 535);
+  ctx.fillText('التفاعلية في منصة لينجوبي (LINGOBEE) بكل ذكاء وإبداع ومثابرة!', 600, 535);
 
   // Star Rating
   ctx.font = 'bold 24px sans-serif';
@@ -983,7 +983,7 @@ function downloadCertificateAsImage() {
 
   // Left: Teacher
   ctx.textAlign = 'left';
-  ctx.fillText('Kids English AI Teacher ✍️', 120, 690);
+  ctx.fillText('LINGOBEE AI Teacher ✍️', 120, 690);
   ctx.font = '16px Cairo, sans-serif';
   ctx.fillStyle = '#64748B';
   ctx.fillText('المعلم الذكي والمنصة', 120, 720);
@@ -1005,7 +1005,7 @@ function downloadCertificateAsImage() {
 
   // Trigger Download
   const link = document.createElement('a');
-  link.download = `شهادة_تفوق_${childName}.png`;
+  link.download = `شهادة_لينجوبي_${childName}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
 
