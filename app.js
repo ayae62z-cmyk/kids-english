@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ==========================================================================
  * Kids English Explorer - Core Game Engine & Speech Synthesis
  * محرك التلعيب، النطق الصوتي التفاعلي، ونظام المكافآت
@@ -167,6 +167,8 @@ function switchView(viewName) {
 
   if (viewName === 'games') {
     startQuizGame();
+  } else if (viewName === 'phrases') {
+    renderPhrases('all');
   }
 }
 
@@ -357,6 +359,7 @@ function switchGameMode(mode) {
   if (mode === 'quiz') startQuizGame();
   else if (mode === 'memory') startMemoryGame();
   else if (mode === 'spelling') startSpellingGame();
+  else if (mode === 'balloons') startBalloonGame();
 }
 
 // Game 1: Listen & Pick Quiz
@@ -596,7 +599,423 @@ function closeCelebration() {
   if (modal) modal.classList.remove('open');
 }
 
-// Initialize on page load
+function openCertificateFromCeleb() {
+  closeCelebration();
+  setTimeout(() => {
+    openCertificateModal();
+  }, 200);
+}
+
+// ==========================================================================
+// 6. Daily Phrases World Module
+// ==========================================================================
+let currentPhraseFilter = 'all';
+
+function renderPhrases(filter = 'all') {
+  currentPhraseFilter = filter;
+  const container = document.getElementById('phrasesGrid');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const filtered = filter === 'all'
+    ? DAILY_PHRASES_DATA
+    : DAILY_PHRASES_DATA.filter(item => item.category === filter);
+
+  filtered.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'phrase-card';
+    card.style.borderTop = `6px solid ${item.color}`;
+    card.innerHTML = `
+      <div class="phrase-top-row">
+        <span class="phrase-tag-badge" style="color: ${item.color}; background: ${item.color}15;">${item.categoryAr}</span>
+        <span class="phrase-emoji-box">${item.emoji}</span>
+      </div>
+      <div class="phrase-content-box">
+        <div class="phrase-english-text">${item.phrase}</div>
+        <div class="phrase-pronounce-text">نطق: ${item.pronunciation}</div>
+        <div class="phrase-arabic-text">${item.arabic}</div>
+      </div>
+      <button type="button" class="phrase-audio-btn" style="background: linear-gradient(135deg, ${item.color}, #0F172A);" title="استمع وكرر">
+        <span>🔊</span> استمع وردد
+      </button>
+    `;
+
+    card.onclick = () => {
+      playPopSound();
+      speakWord(item.phrase, 0.82);
+      addStars(1);
+    };
+
+    container.appendChild(card);
+  });
+}
+
+function filterPhrases(category, btn) {
+  playPopSound();
+  document.querySelectorAll('.phrases-filter-bar .filter-pill').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderPhrases(category);
+}
+
+// ==========================================================================
+// 7. Balloon Pop Game Module (لعبة فرقعة البالونات)
+// ==========================================================================
+let balloonStreak = 0;
+let balloonPopsCount = 0;
+let currentBalloonTarget = null;
+let balloonCategory = 'words';
+
+const BALLOON_COLORS = [
+  '#EF4444', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06D6A0', '#FB5607'
+];
+
+function openBalloonGameDirect() {
+  switchView('games');
+  switchGameMode('balloons');
+}
+
+function changeBalloonCategory(category) {
+  balloonCategory = category;
+  balloonStreak = 0;
+  updateBalloonCounters();
+  startBalloonGame();
+}
+
+function updateBalloonCounters() {
+  const streakEl = document.getElementById('balloonStreakCounter');
+  const popsEl = document.getElementById('balloonPopsCounter');
+  if (streakEl) streakEl.innerText = balloonStreak;
+  if (popsEl) popsEl.innerText = balloonPopsCount;
+}
+
+function startBalloonGame() {
+  const arena = document.getElementById('balloonSkyArena');
+  if (!arena) return;
+  arena.innerHTML = '';
+
+  let candidatePool = [];
+
+  if (balloonCategory === 'letters') {
+    candidatePool = ALPHABET_DATA.map(l => ({
+      key: l.letter,
+      displayTitle: `${l.letter} ${l.small}`,
+      speakText: `Letter ${l.letter}`,
+      emoji: l.emoji,
+      arabic: `حرف ${l.letter}`
+    }));
+  } else if (balloonCategory === 'numbers') {
+    candidatePool = NUMBERS_DATA.map(n => ({
+      key: n.num.toString(),
+      displayTitle: `${n.num} (${n.word})`,
+      speakText: `Number ${n.num}, ${n.word}`,
+      emoji: n.emoji,
+      arabic: n.arabic
+    }));
+  } else {
+    // words: Animals + Fruits
+    candidatePool = [...ANIMALS_DATA, ...FRUITS_DATA].map(item => ({
+      key: item.word,
+      displayTitle: `${item.word} ${item.emoji}`,
+      speakText: item.word,
+      emoji: item.emoji,
+      arabic: item.arabic
+    }));
+  }
+
+  // Shuffle candidate pool
+  const shuffled = [...candidatePool].sort(() => 0.5 - Math.random());
+  currentBalloonTarget = shuffled[0];
+
+  // Pick 5 options (including target)
+  const roundOptions = [currentBalloonTarget, shuffled[1], shuffled[2], shuffled[3], shuffled[4]].sort(() => 0.5 - Math.random());
+
+  // Update target banner
+  const targetDisplay = document.getElementById('balloonTargetText');
+  if (targetDisplay) {
+    targetDisplay.innerText = currentBalloonTarget.displayTitle;
+  }
+
+  // Speak prompt
+  setTimeout(() => {
+    repeatBalloonAudio();
+  }, 300);
+
+  // Layout 5 balloons across the arena width
+  const leftSlots = [6, 25, 44, 63, 82];
+  roundOptions.forEach((option, idx) => {
+    const balloon = document.createElement('div');
+    const color = BALLOON_COLORS[idx % BALLOON_COLORS.length];
+    balloon.className = 'balloon-item';
+    balloon.style.backgroundColor = color;
+    
+    // Position with gentle variation
+    const leftPos = leftSlots[idx] + (Math.random() * 4 - 2);
+    const topPos = 60 + (idx % 2 === 0 ? 30 : 130) + Math.floor(Math.random() * 40);
+    balloon.style.left = `${leftPos}%`;
+    balloon.style.top = `${topPos}px`;
+    balloon.style.animationDelay = `${(idx * 0.3).toFixed(1)}s`;
+    balloon.style.animationDuration = `${(2.4 + (idx * 0.4)).toFixed(1)}s`;
+
+    balloon.innerHTML = `
+      <div class="balloon-inner-emoji">${option.emoji}</div>
+      <div class="balloon-inner-text">${option.key}</div>
+      <div class="balloon-string"></div>
+    `;
+
+    balloon.onclick = () => handleBalloonClick(option, balloon);
+    arena.appendChild(balloon);
+  });
+}
+
+function repeatBalloonAudio() {
+  if (currentBalloonTarget) {
+    speakWord(`Pop the balloon with ${currentBalloonTarget.speakText}!`, 0.85);
+  }
+}
+
+function handleBalloonClick(option, balloonEl) {
+  if (!currentBalloonTarget || balloonEl.classList.contains('popping')) return;
+
+  if (option.key === currentBalloonTarget.key) {
+    // Correct pop!
+    playPopSound();
+    playCorrectSound();
+    balloonEl.classList.add('popping');
+
+    balloonStreak++;
+    balloonPopsCount++;
+    updateBalloonCounters();
+    addStars(3);
+
+    speakWord(`Super! ${currentBalloonTarget.speakText}!`);
+
+    setTimeout(() => {
+      if (balloonStreak > 0 && balloonStreak % 5 === 0) {
+        showCelebration('بطل فرقعة البالونات! 🎈', `أنت مذهل! لقد حققت سلسلة فوز من ${balloonStreak} بالونات متتالية!`, 5);
+      }
+      startBalloonGame();
+    }, 850);
+
+  } else {
+    // Wrong balloon
+    playWrongSound();
+    balloonEl.classList.add('wobble');
+    balloonStreak = 0;
+    updateBalloonCounters();
+    speakWord(`Oops! Try to find ${currentBalloonTarget.speakText}`);
+    setTimeout(() => {
+      balloonEl.classList.remove('wobble');
+    }, 450);
+  }
+}
+
+// ==========================================================================
+// 8. Smart Certificate of Achievement Module (شهادة الإنجاز الفخرية)
+// ==========================================================================
+let currentCertTheme = 'gold';
+
+function openCertificateModal() {
+  playFanfareSound();
+  const modal = document.getElementById('certModalOverlay');
+  if (modal) modal.classList.add('open');
+
+  // Format today's date
+  const today = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = today.toLocaleDateString('ar-EG', options) || '14 أكتوبر 2026';
+  
+  const dateEl = document.getElementById('certDateDisplay');
+  if (dateEl) dateEl.innerText = formattedDate;
+
+  // Update stars count display
+  const starsEl = document.getElementById('certStarsCount');
+  if (starsEl) starsEl.innerText = `(برصيد ${userStars} نجمة ذهبية)`;
+
+  updateCertificatePreview();
+}
+
+function closeCertificateModal() {
+  playPopSound();
+  const modal = document.getElementById('certModalOverlay');
+  if (modal) modal.classList.remove('open');
+}
+
+function updateCertificatePreview() {
+  const input = document.getElementById('childNameInput');
+  const display = document.getElementById('certDisplayName');
+  const val = input ? input.value.trim() : '';
+  if (display) {
+    display.innerText = val ? val : 'بطل الإنجليزية';
+  }
+}
+
+function setCertTheme(theme, btn) {
+  playPopSound();
+  currentCertTheme = theme;
+  document.querySelectorAll('.theme-buttons-row .theme-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const paper = document.getElementById('certificatePaper');
+  if (paper) {
+    paper.className = `certificate-paper theme-${theme}`;
+  }
+}
+
+function printCertificate() {
+  playPopSound();
+  window.print();
+}
+
+function downloadCertificateAsImage() {
+  playPopSound();
+  const childName = (document.getElementById('childNameInput')?.value.trim()) || 'بطل الإنجليزية';
+  const starsCount = userStars;
+  const dateText = document.getElementById('certDateDisplay')?.innerText || '14 أكتوبر 2026';
+
+  // Create High-Resolution Canvas (1200x840)
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200;
+  canvas.height = 840;
+  const ctx = canvas.getContext('2d');
+
+  // Colors per theme
+  let borderColor = '#D97706';
+  let innerBorder = '#B45309';
+  let bgGrad1 = '#FFFFFB';
+  let bgGrad2 = '#FEF9C3';
+  let nameColor = '#D97706';
+  let titleColor = '#B45309';
+
+  if (currentCertTheme === 'blue') {
+    borderColor = '#0284C7';
+    innerBorder = '#0369A1';
+    bgGrad1 = '#FFFFFF';
+    bgGrad2 = '#E0F2FE';
+    nameColor = '#0284C7';
+    titleColor = '#0369A1';
+  } else if (currentCertTheme === 'pink') {
+    borderColor = '#E11D48';
+    innerBorder = '#9F1239';
+    bgGrad1 = '#FFFFFF';
+    bgGrad2 = '#FFE4E6';
+    nameColor = '#E11D48';
+    titleColor = '#BE123C';
+  }
+
+  // Draw Background
+  const radialBg = ctx.createRadialGradient(600, 420, 100, 600, 420, 650);
+  radialBg.addColorStop(0, bgGrad1);
+  radialBg.addColorStop(1, bgGrad2);
+  ctx.fillStyle = radialBg;
+  ctx.fillRect(0, 0, 1200, 840);
+
+  // Outer Border
+  ctx.strokeStyle = borderColor;
+  ctx.lineWidth = 18;
+  ctx.strokeRect(18, 18, 1164, 804);
+
+  // Inner Double Border
+  ctx.strokeStyle = innerBorder;
+  ctx.lineWidth = 4;
+  ctx.strokeRect(40, 40, 1120, 760);
+  ctx.strokeRect(46, 46, 1108, 748);
+
+  // Corner Stars
+  ctx.font = '28px serif';
+  ctx.fillStyle = borderColor;
+  ctx.fillText('✦', 60, 80);
+  ctx.fillText('✦', 1120, 80);
+  ctx.fillText('✦', 60, 770);
+  ctx.fillText('✦', 1120, 770);
+
+  // Top Sub Brand
+  ctx.font = 'bold 22px Cairo, sans-serif';
+  ctx.fillStyle = '#475569';
+  ctx.textAlign = 'center';
+  ctx.fillText('🚀 KIDS ENGLISH EXPLORER - منصة مستكشف الإنجليزية للأطفال', 600, 105);
+
+  // Medal Icon
+  ctx.font = '50px sans-serif';
+  ctx.fillText('🏅', 600, 175);
+
+  // Main Arabic Title
+  ctx.font = '900 48px Cairo, sans-serif';
+  ctx.fillStyle = titleColor;
+  ctx.fillText('شهادة إنجاز وتفوق', 600, 240);
+
+  // English Subtitle
+  ctx.font = 'bold 22px Fredoka, sans-serif';
+  ctx.fillStyle = '#64748B';
+  ctx.fillText('CERTIFICATE OF ACHIEVEMENT', 600, 275);
+
+  // Awarded text
+  ctx.font = 'bold 24px Cairo, sans-serif';
+  ctx.fillStyle = '#334155';
+  ctx.fillText('تُمنح هذه الشهادة بكل فخر واعتزاز للبطل المتميز:', 600, 335);
+
+  // Child Name
+  ctx.font = '900 60px Cairo, sans-serif';
+  ctx.fillStyle = nameColor;
+  ctx.fillText(childName, 600, 420);
+
+  // Line below name
+  ctx.strokeStyle = '#CBD5E1';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(350, 445);
+  ctx.lineTo(850, 445);
+  ctx.stroke();
+
+  // Citation text
+  ctx.font = '600 20px Cairo, sans-serif';
+  ctx.fillStyle = '#475569';
+  ctx.fillText('تقديراً لشغفه الكبير وإتقانه أساسيات اللغة الإنجليزية، واجتياز التحديات والمحادثات والألعاب', 600, 500);
+  ctx.fillText('التفاعلية في منصة مستكشف الإنجليزية للأطفال بكل ذكاء وإبداع ومثابرة!', 600, 535);
+
+  // Star Rating
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillStyle = '#D97706';
+  ctx.fillText(`⭐⭐⭐⭐⭐  (برصيد ${starsCount} نجمة ذهبية)`, 600, 595);
+
+  // Signatures Row
+  ctx.font = 'bold 20px Cairo, sans-serif';
+  ctx.fillStyle = '#1E293B';
+
+  // Left: Teacher
+  ctx.textAlign = 'left';
+  ctx.fillText('Kids English AI Teacher ✍️', 120, 690);
+  ctx.font = '16px Cairo, sans-serif';
+  ctx.fillStyle = '#64748B';
+  ctx.fillText('المعلم الذكي والمنصة', 120, 720);
+
+  // Center Seal
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillStyle = borderColor;
+  ctx.fillText('★ OFFICIAL SEAL 2026 ★', 600, 715);
+
+  // Right: Date
+  ctx.textAlign = 'right';
+  ctx.font = 'bold 20px Cairo, sans-serif';
+  ctx.fillStyle = '#1E293B';
+  ctx.fillText(dateText, 1080, 690);
+  ctx.font = '16px Cairo, sans-serif';
+  ctx.fillStyle = '#64748B';
+  ctx.fillText('تاريخ الإصدار المعتمد', 1080, 720);
+
+  // Trigger Download
+  const link = document.createElement('a');
+  link.download = `شهادة_تفوق_${childName}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+
+  addStars(5);
+  playFanfareSound();
+}
+
+// ==========================================================================
+// 9. Initialize Everything on DOMContentLoaded
+// ==========================================================================
 window.addEventListener('DOMContentLoaded', () => {
   const starCountEl = document.getElementById('starCounter');
   if (starCountEl) starCountEl.innerText = userStars;
@@ -606,4 +1025,12 @@ window.addEventListener('DOMContentLoaded', () => {
   renderAnimals();
   renderColorsAndShapes();
   renderFruits();
+  renderPhrases('all');
+
+  // Format today's date for certificate
+  const today = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = today.toLocaleDateString('ar-EG', options) || '14 أكتوبر 2026';
+  const dateEl = document.getElementById('certDateDisplay');
+  if (dateEl) dateEl.innerText = formattedDate;
 });

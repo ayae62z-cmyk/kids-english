@@ -133,3 +133,39 @@ const SPELLING_WORDS = [
   { word: 'BAT', arabic: 'خفاش', emoji: '🦇', hint: 'Flies at night' },
   { word: 'OWL', arabic: 'بومة', emoji: '🦉', hint: 'Wise bird with big eyes' }
 ];
+
+const DAILY_PHRASES_DATA = [
+  // 1. Greetings & Farewells (التحيات والوداع)
+  { phrase: 'Hello!', arabic: 'مرحباً!', emoji: '👋', category: 'greetings', categoryAr: 'التحيات والوداع', color: '#3A86FF', pronunciation: 'هَلُو' },
+  { phrase: 'Good morning!', arabic: 'صباح الخير!', emoji: '🌅', category: 'greetings', categoryAr: 'التحيات والوداع', color: '#FFB703', pronunciation: 'جُودْ مُورْنِنْغ' },
+  { phrase: 'Good afternoon!', arabic: 'مساء الخير (بعد الظهر)!', emoji: '☀️', category: 'greetings', categoryAr: 'التحيات والوداع', color: '#FB8500', pronunciation: 'جُودْ آفْتَرْنُون' },
+  { phrase: 'Good evening!', arabic: 'مساء النور والسرور!', emoji: '🌆', category: 'greetings', categoryAr: 'التحيات والوداع', color: '#8338EC', pronunciation: 'جُودْ إِيفْنِنْغ' },
+  { phrase: 'Good night!', arabic: 'تصبح على خير!', emoji: '🌙', category: 'greetings', categoryAr: 'التحيات والوداع', color: '#3A0CA3', pronunciation: 'جُودْ نَايْت' },
+  { phrase: 'Goodbye!', arabic: 'مع السلامة / وداعاً!', emoji: '🙋‍♂️', category: 'greetings', categoryAr: 'التحيات والوداع', color: '#FF006E', pronunciation: 'جُودْ بَاي' },
+  { phrase: 'See you later!', arabic: 'أراك لاحقاً!', emoji: '🏃', category: 'greetings', categoryAr: 'التحيات والوداع', color: '#06D6A0', pronunciation: 'سِي يُو لِيتَر' },
+
+  // 2. Manners & Magic Words (الكلمات السحرية والتهذيب)
+  { phrase: 'Please', arabic: 'من فضلك / لو سمحت', emoji: '🙏', category: 'manners', categoryAr: 'الكلمات السحرية', color: '#4CC9F0', pronunciation: 'بْلِيز' },
+  { phrase: 'Thank you!', arabic: 'شكراً جزيلاً لك!', emoji: '💖', category: 'manners', categoryAr: 'الكلمات السحرية', color: '#FF4D6D', pronunciation: 'ثَانْك يُو' },
+  { phrase: "You're welcome!", arabic: 'عفواً / على الرحب والسعة!', emoji: '🤗', category: 'manners', categoryAr: 'الكلمات السحرية', color: '#06D6A0', pronunciation: 'يُورْ وِيلْكَام' },
+  { phrase: 'Excuse me!', arabic: 'عذراً / اسمح لي!', emoji: '✋', category: 'manners', categoryAr: 'الكلمات السحرية', color: '#FB5607', pronunciation: 'إِكْسْكْيُوزْ مِي' },
+  { phrase: "I'm sorry!", arabic: 'أنا آسف جداً!', emoji: '🥺', category: 'manners', categoryAr: 'الكلمات السحرية', color: '#7209B7', pronunciation: 'آيْمْ سُورِي' },
+  { phrase: 'Nice to meet you!', arabic: 'سعيد بلقائك ومعرفتك!', emoji: '🤝', category: 'manners', categoryAr: 'الكلمات السحرية', color: '#3A86FF', pronunciation: 'نَايْسْ تُو مِيتْ يُو' },
+
+  // 3. Feelings & State (المشاعر والأحوال)
+  { phrase: 'How are you?', arabic: 'كيف حالك اليوم؟', emoji: '🤔', category: 'feelings', categoryAr: 'المشاعر والأحوال', color: '#FFB703', pronunciation: 'هَاوْ آرْ يُو' },
+  { phrase: 'I am happy!', arabic: 'أنا سعيد ومبتهج!', emoji: '😄', category: 'feelings', categoryAr: 'المشاعر والأحوال', color: '#FF006E', pronunciation: 'آيْ آمْ هَابِي' },
+  { phrase: 'I am excited!', arabic: 'أنا متحمس ومستعد!', emoji: '🤩', category: 'feelings', categoryAr: 'المشاعر والأحوال', color: '#8338EC', pronunciation: 'آيْ آمْ إِكْسَايْتِد' },
+  { phrase: 'I am hungry!', arabic: 'أنا جائع!', emoji: '🍕', category: 'feelings', categoryAr: 'المشاعر والأحوال', color: '#FB5607', pronunciation: 'آيْ آمْ هَنْغْرِي' },
+  { phrase: 'I am thirsty!', arabic: 'أنا عطشان!', emoji: '🥤', category: 'feelings', categoryAr: 'المشاعر والأحوال', color: '#00BBF9', pronunciation: 'آيْ آمْ ثِرْسْتِي' },
+  { phrase: 'I love my family!', arabic: 'أنا أحب عائلتي!', emoji: '👨‍👩‍👧‍👦', category: 'feelings', categoryAr: 'المشاعر والأحوال', color: '#FF4D6D', pronunciation: 'آيْ لَفْ مَايْ فَامِلِي' },
+
+  // 4. Conversation & Daily Life (التعارف والأسئلة)
+  { phrase: 'What is your name?', arabic: 'ما هو اسمك؟', emoji: '❓', category: 'conversation', categoryAr: 'التعارف والأسئلة', color: '#3A86FF', pronunciation: 'وَاتْ إِزْ يُورْ نِيم' },
+  { phrase: 'My name is...', arabic: 'اسمي هو...', emoji: '🏷️', category: 'conversation', categoryAr: 'التعارف والأسئلة', color: '#06D6A0', pronunciation: 'مَايْ نِيمْ إِز' },
+  { phrase: 'How old are you?', arabic: 'كم عمرك؟', emoji: '🎂', category: 'conversation', categoryAr: 'التعارف والأسئلة', color: '#FB8500', pronunciation: 'هَاوْ أُولْدْ آرْ يُو' },
+  { phrase: 'Where are you from?', arabic: 'من أي بلد أنت؟', emoji: '🌍', category: 'conversation', categoryAr: 'التعارف والأسئلة', color: '#4CC9F0', pronunciation: 'وِيرْ آرْ يُو فْرُوم' },
+  { phrase: "Let's play together!", arabic: 'دعنا نلعب ونمرح معاً!', emoji: '⚽', category: 'conversation', categoryAr: 'التعارف والأسئلة', color: '#FF006E', pronunciation: 'لِيتْسْ بْلِي تُوغِيذَر' },
+  { phrase: 'I love English!', arabic: 'أنا أحب تعلم الإنجليزية!', emoji: '🌟', category: 'conversation', categoryAr: 'التعارف والأسئلة', color: '#FFB703', pronunciation: 'آيْ لَفْ إِنْغْلِيش' }
+];
+

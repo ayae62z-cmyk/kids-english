@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -64,8 +64,14 @@
       <button class="nav-pill orange" data-view="fruits" onclick="switchView('fruits')">
         <span>🍎</span> الفواكه
       </button>
+      <button class="nav-pill cyan" data-view="phrases" onclick="switchView('phrases')">
+        <span>💬</span> عبارات يومية
+      </button>
       <button class="nav-pill" style="background: #F43F5E; color: #fff; box-shadow: 0 4px 0 #9F1239;" data-view="games" onclick="switchView('games')">
         <span>🎮</span> ألعاب وتحديات
+      </button>
+      <button class="nav-pill gold" data-view="certificate" onclick="openCertificateModal()">
+        <span>🏆</span> شهادة الإنجاز
       </button>
     </div>
   </nav>
@@ -144,6 +150,18 @@
           </div>
         </div>
 
+        <!-- Phrases Card -->
+        <div class="world-card c-phrases" onclick="switchView('phrases')">
+          <div class="world-top">
+            <span class="world-badge">24 عبارة ناطقة</span>
+            <div class="world-emoji">💬</div>
+          </div>
+          <div class="world-bottom">
+            <h3>عالم العبارات اليومية (Daily Phrases)</h3>
+            <p>تعلم التحيات والمشاعر والكلمات السحرية باللغة الإنجليزية مع الصوت</p>
+          </div>
+        </div>
+
         <!-- Games Card -->
         <div class="world-card c-games" onclick="switchView('games')">
           <div class="world-top">
@@ -152,7 +170,31 @@
           </div>
           <div class="world-bottom">
             <h3>الألعاب والتحديات (Fun Games)</h3>
-            <p>العب واختبر معلوماتك واجمع النجوم في ألعاب الذاكرة والتهجئة</p>
+            <p>العب واختبر معلوماتك واجمع النجوم في ألعاب الذاكرة، التهجئة، وفرقعة البالونات</p>
+          </div>
+        </div>
+
+        <!-- Balloon Pop Quick Card -->
+        <div class="world-card c-balloons" onclick="openBalloonGameDirect()">
+          <div class="world-top">
+            <span class="world-badge" style="background: #FFE4E6; color: #E11D48;">لعبة جديدة 🎈</span>
+            <div class="world-emoji">🎈</div>
+          </div>
+          <div class="world-bottom">
+            <h3>فرقعة البالونات (Balloon Pop)</h3>
+            <p>استمع للكلمة أو الحرف وطِر لفرقعة البالون الصحيح لكسب النجوم السحرية!</p>
+          </div>
+        </div>
+
+        <!-- Certificate Card -->
+        <div class="world-card c-cert" onclick="openCertificateModal()">
+          <div class="world-top">
+            <span class="world-badge" style="background: #FEF3C7; color: #B45309;">شهادة فخرية 🏆</span>
+            <div class="world-emoji">📜</div>
+          </div>
+          <div class="world-bottom">
+            <h3>شهادة الإنجاز الذكية (Certificate)</h3>
+            <p>اكتب اسمك واطبع شهادة تفوق ذهبية فخمة باسمك واحفظها كملف PDF أو صورة!</p>
           </div>
         </div>
 
@@ -224,6 +266,27 @@
     </section>
 
     <!-- ====================================================================
+         View: Daily Phrases World (عالم العبارات والمحادثات)
+         ==================================================================== -->
+    <section class="view-section" id="view-phrases">
+      <div class="section-banner">
+        <h2>💬 عالم المحادثات والعبارات اليومية (Daily Phrases)</h2>
+        <p>انقر على أي بطاقة لتستمع للنطق الصوتي الإنجليزي بوضوح وتتحدث بثقة! 🌟</p>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="phrases-filter-bar">
+        <button class="filter-pill active" onclick="filterPhrases('all', this)">✨ الكل (All)</button>
+        <button class="filter-pill" onclick="filterPhrases('greetings', this)">👋 التحيات والوداع</button>
+        <button class="filter-pill" onclick="filterPhrases('manners', this)">🙏 الكلمات السحرية</button>
+        <button class="filter-pill" onclick="filterPhrases('feelings', this)">😄 المشاعر والأحوال</button>
+        <button class="filter-pill" onclick="filterPhrases('conversation', this)">❓ التعارف والأسئلة</button>
+      </div>
+
+      <div class="phrases-grid" id="phrasesGrid"></div>
+    </section>
+
+    <!-- ====================================================================
          View 7: Fun Games Hub
          ==================================================================== -->
     <section class="view-section" id="view-games">
@@ -242,6 +305,9 @@
         </button>
         <button class="game-tab-btn" data-mode="spelling" onclick="switchGameMode('spelling')">
           🧩 لعبة ترتيب الحروف
+        </button>
+        <button class="game-tab-btn" data-mode="balloons" onclick="switchGameMode('balloons')">
+          🎈 فرقعة البالونات (Balloon Pop)
         </button>
       </div>
 
@@ -299,6 +365,45 @@
         </div>
       </div>
 
+      <!-- Game Mode 4: Balloon Pop -->
+      <div class="game-sub-view" id="game-mode-balloons" style="display: none;">
+        <div class="game-board-card balloon-game-card">
+          <div class="balloon-game-header">
+            <div class="balloon-target-box">
+              <span class="target-label">🎯 المطلوب فرقعته:</span>
+              <span class="target-display" id="balloonTargetText">Apple 🍎</span>
+              <button type="button" class="speaker-inline-btn" onclick="repeatBalloonAudio()" title="إعادة الاستماع">🔊 استمع</button>
+            </div>
+            
+            <div class="balloon-stats-box">
+              <div class="stat-item">
+                <span class="stat-icon">🔥</span>
+                <span class="stat-name">السلسلة:</span>
+                <strong id="balloonStreakCounter">0</strong>
+              </div>
+              <div class="stat-item">
+                <span class="stat-icon">🎈</span>
+                <span class="stat-name">المفرقعة:</span>
+                <strong id="balloonPopsCounter">0</strong>
+              </div>
+            </div>
+
+            <div class="balloon-mode-selector">
+              <label for="balloonCategorySelect">نوع التحدي:</label>
+              <select id="balloonCategorySelect" onchange="changeBalloonCategory(this.value)">
+                <option value="words">فواكه وحيوانات 🍎🦁</option>
+                <option value="letters">الحروف الهجائية A-Z 🔤</option>
+                <option value="numbers">الأرقام 1-20 🔢</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="balloon-sky-arena" id="balloonSkyArena">
+            <!-- Floating Balloons will be rendered here dynamically -->
+          </div>
+        </div>
+      </div>
+
     </section>
 
   </main>
@@ -317,6 +422,120 @@
       <button type="button" class="btn-primary-fun" onclick="closeCelebration()">
         متابعة اللعب والمغامرة! 🚀
       </button>
+
+      <button type="button" class="btn-cert-quick" onclick="openCertificateFromCeleb()">
+        🏆 استلم شهادتك الفخرية الآن!
+      </button>
+    </div>
+  </div>
+
+  <!-- Certificate Modal -->
+  <div class="modal-overlay cert-overlay" id="certModalOverlay" onclick="closeCertificateModal()">
+    <div class="cert-modal-dialog" onclick="event.stopPropagation()">
+      <div class="cert-modal-header">
+        <div class="cert-header-title">
+          <span>🏆</span>
+          <h3>شهادة الإنجاز والتفوق الفخرية</h3>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeCertificateModal()">✕</button>
+      </div>
+
+      <div class="cert-controls-panel">
+        <div class="cert-input-box">
+          <label for="childNameInput">اكتب اسم البطل / البطلة الصغير:</label>
+          <div class="input-with-icon">
+            <span>✍️</span>
+            <input type="text" id="childNameInput" placeholder="اكتب الاسم هنا (مثال: أحمد، سارة، Omar...)" value="بطل الإنجليزية" oninput="updateCertificatePreview()" maxlength="35">
+          </div>
+        </div>
+
+        <div class="cert-theme-box">
+          <label>اختر تصميم الشهادة:</label>
+          <div class="theme-buttons-row">
+            <button type="button" class="theme-btn active" data-theme="gold" onclick="setCertTheme('gold', this)">🌟 ملكي ذهبي</button>
+            <button type="button" class="theme-btn" data-theme="blue" onclick="setCertTheme('blue', this)">🌊 أزرق أميري</button>
+            <button type="button" class="theme-btn" data-theme="pink" onclick="setCertTheme('pink', this)">🌸 وردي مرح</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Certificate Printable Paper -->
+      <div class="certificate-paper-wrapper" id="certPaperWrapper">
+        <div class="certificate-paper theme-gold" id="certificatePaper">
+          <div class="cert-inner-frame">
+            <div class="cert-corner-flower tl">✦</div>
+            <div class="cert-corner-flower tr">✦</div>
+            <div class="cert-corner-flower bl">✦</div>
+            <div class="cert-corner-flower br">✦</div>
+
+            <!-- Top Row -->
+            <div class="cert-top-row">
+              <div class="cert-sub-brand">🚀 Kids English Explorer</div>
+              <div class="cert-medal-icon">🏅</div>
+              <div class="cert-honors-tag">EXCELLENCE AWARD</div>
+            </div>
+
+            <!-- Certificate Header -->
+            <div class="cert-header-block">
+              <h1 class="cert-ar-title">شهادة تفوق وإنجاز</h1>
+              <div class="cert-en-title">Certificate of Achievement</div>
+              <p class="cert-awarded-text">تُمنح هذه الشهادة بكل فخر واعتزاز للبطل المتميز:</p>
+            </div>
+
+            <!-- Child Name Box -->
+            <div class="cert-name-display-box">
+              <span class="cert-child-name" id="certDisplayName">بطل الإنجليزية</span>
+            </div>
+
+            <!-- Award Description -->
+            <p class="cert-paragraph">
+              تقديراً لتميزه وشغفه الرائع في إتقان أساسيات اللغة الإنجليزية، واجتياز التحديات والمحادثات والألعاب التفاعلية في منصة <strong>Kids English Explorer</strong> بكل ذكاء وإبداع!
+            </p>
+
+            <!-- Star Rating Row -->
+            <div class="cert-stars-row">
+              <span class="cert-star-icons">⭐⭐⭐⭐⭐</span>
+              <span class="cert-score-label" id="certStarsCount">(برصيد 10+ نجمة ذهبية)</span>
+            </div>
+
+            <!-- Footer Signatures & Official Seal -->
+            <div class="cert-bottom-row">
+              <div class="cert-sig-block">
+                <div class="cert-sig-line">Kids English AI Teacher ✍️</div>
+                <div class="cert-sig-role">المعلم الذكي والمنصة</div>
+              </div>
+
+              <div class="cert-seal-badge">
+                <div class="seal-inner">
+                  <span>★ OFFICIAL ★</span>
+                  <strong>SEAL</strong>
+                  <span>2026</span>
+                </div>
+              </div>
+
+              <div class="cert-sig-block">
+                <div class="cert-sig-line" id="certDateDisplay">14 أكتوبر 2026</div>
+                <div class="cert-sig-role">تاريخ الإصدار المعتمد</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons Footer -->
+      <div class="cert-actions-footer">
+        <button type="button" class="btn-cert-action print-btn" onclick="printCertificate()">
+          🖨️ طباعة الشهادة أو حفظ PDF
+        </button>
+        <button type="button" class="btn-cert-action download-btn" onclick="downloadCertificateAsImage()">
+          📥 تحميل كصورة (PNG)
+        </button>
+        <button type="button" class="btn-cert-action close-btn" onclick="closeCertificateModal()">
+          إغلاق
+        </button>
+      </div>
+
     </div>
   </div>
 
