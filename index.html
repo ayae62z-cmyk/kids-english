@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مستكشف الإنجليزية للأطفال | Kids English Explorer</title>
+
+  <!-- Google Fonts: Fredoka & Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Playful Header -->
+  <header class="kids-header">
+    <div class="header-container">
+      
+      <div class="brand-box" onclick="switchView('home')">
+        <div class="brand-mascot">🚀</div>
+        <div class="brand-text">
+          <h1>Kids English Explorer</h1>
+          <p>مستكشف الإنجليزية الممتع للأطفال 🌟</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Stars Counter -->
+        <div class="star-badge" title="رصيد نجومك وإنجازاتك!">
+          <span>⭐</span>
+          <span id="starCounter">10</span>
+        </div>
+
+        <!-- Sound Toggle -->
+        <button type="button" class="btn-icon" id="soundToggleBtn" onclick="toggleSound()" title="تشغيل / كتم الصوت">
+          🔊
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Navigation Ribbon -->
+  <nav class="nav-ribbon">
+    <div class="nav-container">
+      <button class="nav-pill active" data-view="home" onclick="switchView('home')">
+        <span>🏠</span> الرئيسية
+      </button>
+      <button class="nav-pill pink" data-view="alphabet" onclick="switchView('alphabet')">
+        <span>🔤</span> الحروف A-Z
+      </button>
+      <button class="nav-pill yellow" data-view="numbers" onclick="switchView('numbers')">
+        <span>🔢</span> الأرقام 1-20
+      </button>
+      <button class="nav-pill green" data-view="animals" onclick="switchView('animals')">
+        <span>🦁</span> الحيوانات
+      </button>
+      <button class="nav-pill purple" data-view="colors" onclick="switchView('colors')">
+        <span>🎨</span> الألوان والأشكال
+      </button>
+      <button class="nav-pill orange" data-view="fruits" onclick="switchView('fruits')">
+        <span>🍎</span> الفواكه
+      </button>
+      <button class="nav-pill" style="background: #F43F5E; color: #fff; box-shadow: 0 4px 0 #9F1239;" data-view="games" onclick="switchView('games')">
+        <span>🎮</span> ألعاب وتحديات
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ====================================================================
+         View 1: Home Dashboard (العوالم التعليمية)
+         ==================================================================== -->
+    <section class="view-section active" id="view-home">
+      <div class="section-banner">
+        <h2>مرحباً يا بطل! جاهز لرحلة التعلم؟ 🎈</h2>
+        <p>اختر عالماً من العوالم السحرية لتتعلم الحروف، الكلمات، والألعاب باللغة الإنجليزية!</p>
+      </div>
+
+      <div class="hero-worlds-grid">
+        
+        <!-- Alphabet Card -->
+        <div class="world-card c-alphabet" onclick="switchView('alphabet')">
+          <div class="world-top">
+            <span class="world-badge">26 حرفاً مع النطق</span>
+            <div class="world-emoji">🔤</div>
+          </div>
+          <div class="world-bottom">
+            <h3>عالم الحروف (Alphabet)</h3>
+            <p>تعلم الحروف من A إلى Z مع نطق الأصوات والكلمات المصورة</p>
+          </div>
+        </div>
+
+        <!-- Numbers Card -->
+        <div class="world-card c-numbers" onclick="switchView('numbers')">
+          <div class="world-top">
+            <span class="world-badge">1 إلى 20</span>
+            <div class="world-emoji">🔢</div>
+          </div>
+          <div class="world-bottom">
+            <h3>عالم الأرقام (Numbers)</h3>
+            <p>تعلم العد ونطق الأرقام مع أشكال مرحة ومتحركة</p>
+          </div>
+        </div>
+
+        <!-- Animals Card -->
+        <div class="world-card c-animals" onclick="switchView('animals')">
+          <div class="world-top">
+            <span class="world-badge">20 حيواناً مميزاً</span>
+            <div class="world-emoji">🦁</div>
+          </div>
+          <div class="world-bottom">
+            <h3>مملكة الحيوانات (Animals)</h3>
+            <p>تعرف على حيوانات الغابة والمزرعة والبحر وأصواتها اللطيفة</p>
+          </div>
+        </div>
+
+        <!-- Colors & Shapes Card -->
+        <div class="world-card c-colors" onclick="switchView('colors')">
+          <div class="world-top">
+            <span class="world-badge">ألوان وأشكال</span>
+            <div class="world-emoji">🎨</div>
+          </div>
+          <div class="world-bottom">
+            <h3>الألوان والأشكال (Colors & Shapes)</h3>
+            <p>اكتشف الألوان الساطعة والأشكال الهندسية ونطقها الصحيح</p>
+          </div>
+        </div>
+
+        <!-- Fruits Card -->
+        <div class="world-card c-fruits" onclick="switchView('fruits')">
+          <div class="world-top">
+            <span class="world-badge">فواكه شهية</span>
+            <div class="world-emoji">🍎</div>
+          </div>
+          <div class="world-bottom">
+            <h3>حديقة الفواكه (Fruits)</h3>
+            <p>تعلم أسماء الفواكه والأطعمة الصحية المفضلة لديك</p>
+          </div>
+        </div>
+
+        <!-- Games Card -->
+        <div class="world-card c-games" onclick="switchView('games')">
+          <div class="world-top">
+            <span class="world-badge">ألعاب وتحديات</span>
+            <div class="world-emoji">🎮</div>
+          </div>
+          <div class="world-bottom">
+            <h3>الألعاب والتحديات (Fun Games)</h3>
+            <p>العب واختبر معلوماتك واجمع النجوم في ألعاب الذاكرة والتهجئة</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         View 2: Alphabet World
+         ==================================================================== -->
+    <section class="view-section" id="view-alphabet">
+      <div class="section-banner">
+        <h2>🔤 الحروف الهجائية الإنجليزية (Alphabet A - Z)</h2>
+        <p>انقر على أي بطاقة لتستمع إلى صوت الحرف والكلمة المصورة بصوت نقي!</p>
+      </div>
+
+      <div class="alphabet-grid" id="alphabetGrid"></div>
+    </section>
+
+    <!-- ====================================================================
+         View 3: Numbers World
+         ==================================================================== -->
+    <section class="view-section" id="view-numbers">
+      <div class="section-banner">
+        <h2>🔢 الأرقام والعد (Numbers 1 - 20)</h2>
+        <p>انقر على أي رقم لتسمع نطقه بالإنجليزي وتعد العناصر التفاعلية معه!</p>
+      </div>
+
+      <div class="numbers-grid" id="numbersGrid"></div>
+    </section>
+
+    <!-- ====================================================================
+         View 4: Animals World
+         ==================================================================== -->
+    <section class="view-section" id="view-animals">
+      <div class="section-banner">
+        <h2>🦁 مملكة الحيوانات (Animal Kingdom)</h2>
+        <p>استمع لأصماء الحيوانات باللغة الإنجليزية واكتشف أصواتها المرحة!</p>
+      </div>
+
+      <div class="items-grid" id="animalsGrid"></div>
+    </section>
+
+    <!-- ====================================================================
+         View 5: Colors & Shapes World
+         ==================================================================== -->
+    <section class="view-section" id="view-colors">
+      <div class="section-banner">
+        <h2>🎨 الألوان والأشكال (Colors & Shapes)</h2>
+        <p>تعلم نطق الألوان الزاهية والأشكال الهندسية اليومية بالإنجليزية</p>
+      </div>
+
+      <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin: 1.5rem 0 1rem;">الألوان (Colors):</h3>
+      <div class="items-grid" id="colorsGrid"></div>
+
+      <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin: 3rem 0 1rem;">الأشكال (Shapes):</h3>
+      <div class="items-grid" id="shapesGrid"></div>
+    </section>
+
+    <!-- ====================================================================
+         View 6: Fruits World
+         ==================================================================== -->
+    <section class="view-section" id="view-fruits">
+      <div class="section-banner">
+        <h2>🍎 حديقة الفواكه (Delicious Fruits)</h2>
+        <p>انقر على الفاكهة اللذيذة لتسمع اسمها بالإنجليزي وتجمع النجوم!</p>
+      </div>
+
+      <div class="items-grid" id="fruitsGrid"></div>
+    </section>
+
+    <!-- ====================================================================
+         View 7: Fun Games Hub
+         ==================================================================== -->
+    <section class="view-section" id="view-games">
+      <div class="section-banner">
+        <h2>🎮 ساحة الألعاب والتحديات الذكية</h2>
+        <p>اختر اللعبة المفضلة واكسب 5 نجوم مع كل فوز! 🌟</p>
+      </div>
+
+      <!-- Game Sub Tabs -->
+      <div class="game-tabs">
+        <button class="game-tab-btn active" data-mode="quiz" onclick="switchGameMode('quiz')">
+          👂 لعبة "اسمع واختر"
+        </button>
+        <button class="game-tab-btn" data-mode="memory" onclick="switchGameMode('memory')">
+          🃏 لعبة بطاقات الذاكرة
+        </button>
+        <button class="game-tab-btn" data-mode="spelling" onclick="switchGameMode('spelling')">
+          🧩 لعبة ترتيب الحروف
+        </button>
+      </div>
+
+      <!-- Game Mode 1: Listen & Pick Quiz -->
+      <div class="game-sub-view" id="game-mode-quiz">
+        <div class="game-board-card">
+          <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem;">
+            استمع للكلمة وانقر على البطاقة الصحيحة!
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">انقر على زر السماعة لإعادة الاستماع:</p>
+
+          <button class="speaker-big-btn" onclick="repeatQuizAudio()" title="إعادة الاستماع">
+            🔊
+          </button>
+
+          <div class="quiz-options-grid" id="quizOptionsContainer"></div>
+        </div>
+      </div>
+
+      <!-- Game Mode 2: Memory Match -->
+      <div class="game-sub-view" id="game-mode-memory" style="display: none;">
+        <div class="game-board-card">
+          <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem;">
+            لعبة تطابق الذاكرة (Memory Match)
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">اقلب البطاقات وطابق بين الكلمة الإنجليزية وصورتها المقابلة!</p>
+
+          <div class="memory-grid" id="memoryGridContainer"></div>
+        </div>
+      </div>
+
+      <!-- Game Mode 3: Spelling Bubbles -->
+      <div class="game-sub-view" id="game-mode-spelling" style="display: none;">
+        <div class="game-board-card">
+          <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem;">
+            لعبة ترتيب الحروف (Spelling Bubbles)
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">انقر على فقاعات الحروف بالترتيب الصحيح لتهجئة الكلمة:</p>
+
+          <div style="margin: 1.5rem 0;">
+            <span id="spellingEmoji" style="font-size: 4rem; display: inline-block;">🐱</span>
+            <div id="spellingArabicHint" style="font-size: 1.1rem; font-weight: 700; color: #64748B; margin-top: 0.2rem;">قطة</div>
+          </div>
+
+          <!-- Target Slots -->
+          <div class="spelling-target" id="spellingSlotsContainer"></div>
+
+          <!-- Letter Bubbles -->
+          <div class="spelling-letters" id="spellingBubblesContainer"></div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Celebration Modal -->
+  <div class="modal-overlay" id="celebModalOverlay" onclick="closeCelebration()">
+    <div class="celeb-modal" onclick="event.stopPropagation()">
+      <div class="celeb-badge">🏆</div>
+      <h3 class="celeb-title" id="celebTitle">أحسنت صنعاً!</h3>
+      <p id="celebMsg" style="font-size: 1.05rem; color: #475569; font-weight: 600; line-height: 1.5;"></p>
+      
+      <div class="celeb-stars" id="celebStarsText">
+        +5 ⭐ نجوم جديدة!
+      </div>
+
+      <button type="button" class="btn-primary-fun" onclick="closeCelebration()">
+        متابعة اللعب والمغامرة! 🚀
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="kids-footer">
+    <p>منصة مستكشف الإنجليزية للأطفال (Kids English Explorer) © 2026 - تجربة تعليمية تفاعلية ممتعة ومجانية 🌟</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

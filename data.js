@@ -1,0 +1,135 @@
+/**
+ * ==========================================================================
+ * Kids English Explorer - Data Bank & Vocabulary Modules
+ * بنك البيانات والكلمات التعليمية للأطفال
+ * ==========================================================================
+ */
+
+const ALPHABET_DATA = [
+  { letter: 'A', small: 'a', word: 'Apple', arabic: 'تفاحة', emoji: '🍎', phonics: 'A says /æ/ as in Apple', color: '#FF6B6B' },
+  { letter: 'B', small: 'b', word: 'Bear', arabic: 'دب', emoji: '🐻', phonics: 'B says /b/ as in Bear', color: '#4ECDC4' },
+  { letter: 'C', small: 'c', word: 'Cat', arabic: 'قطة', emoji: '🐱', phonics: 'C says /k/ as in Cat', color: '#FFE66D' },
+  { letter: 'D', small: 'd', word: 'Dog', arabic: 'كلب', emoji: '🐶', phonics: 'D says /d/ as in Dog', color: '#1A535C' },
+  { letter: 'E', small: 'e', word: 'Elephant', arabic: 'فيل', emoji: '🐘', phonics: 'E says /e/ as in Elephant', color: '#9B5DE5' },
+  { letter: 'F', small: 'f', word: 'Fish', arabic: 'سمكة', emoji: '🐟', phonics: 'F says /f/ as in Fish', color: '#F15BB5' },
+  { letter: 'G', small: 'g', word: 'Giraffe', arabic: 'زرافة', emoji: '🦒', phonics: 'G says /dʒ/ as in Giraffe', color: '#FEE440' },
+  { letter: 'H', small: 'h', word: 'Horse', arabic: 'حصان', emoji: '🐴', phonics: 'H says /h/ as in Horse', color: '#00BBF9' },
+  { letter: 'I', small: 'i', word: 'Ice Cream', arabic: 'مثلجات', emoji: '🍦', phonics: 'I says /aɪ/ as in Ice Cream', color: '#00F5D4' },
+  { letter: 'J', small: 'j', word: 'Juice', arabic: 'عصير', emoji: '🧃', phonics: 'J says /dʒ/ as in Juice', color: '#FF9F1C' },
+  { letter: 'K', small: 'k', word: 'Kite', arabic: 'طائرة ورقية', emoji: '🪁', phonics: 'K says /k/ as in Kite', color: '#2EC4B6' },
+  { letter: 'L', small: 'l', word: 'Lion', arabic: 'أسد', emoji: '🦁', phonics: 'L says /l/ as in Lion', color: '#E71D36' },
+  { letter: 'M', small: 'm', word: 'Monkey', arabic: 'قرد', emoji: '🐵', phonics: 'M says /m/ as in Monkey', color: '#FF99C8' },
+  { letter: 'N', small: 'n', word: 'Nest', arabic: 'عش', emoji: '🪺', phonics: 'N says /n/ as in Nest', color: '#FCF6BD' },
+  { letter: 'O', small: 'o', word: 'Orange', arabic: 'برتقال', emoji: '🍊', phonics: 'O says /ɒ/ as in Orange', color: '#D0F4DE' },
+  { letter: 'P', small: 'p', word: 'Panda', arabic: 'باندا', emoji: '🐼', phonics: 'P says /p/ as in Panda', color: '#A9DEF9' },
+  { letter: 'Q', small: 'q', word: 'Queen', arabic: 'ملكة', emoji: '👑', phonics: 'Q says /kw/ as in Queen', color: '#E4C1F9' },
+  { letter: 'R', small: 'r', word: 'Rabbit', arabic: 'أرنب', emoji: '🐰', phonics: 'R says /r/ as in Rabbit', color: '#FFB703' },
+  { letter: 'S', small: 's', word: 'Sun', arabic: 'شمس', emoji: '☀️', phonics: 'S says /s/ as in Sun', color: '#FB8500' },
+  { letter: 'T', small: 't', word: 'Tiger', arabic: 'نمر', emoji: '🐯', phonics: 'T says /t/ as in Tiger', color: '#023047' },
+  { letter: 'U', small: 'u', word: 'Umbrella', arabic: 'مظلة', emoji: '☂️', phonics: 'U says /ʌ/ as in Umbrella', color: '#219EBC' },
+  { letter: 'V', small: 'v', word: 'Van', arabic: 'شاحنة صغيرة', emoji: '🚐', phonics: 'V says /v/ as in Van', color: '#8ECAE6' },
+  { letter: 'W', small: 'w', word: 'Whale', arabic: 'حوت', emoji: '🐋', phonics: 'W says /w/ as in Whale', color: '#4361EE' },
+  { letter: 'X', small: 'x', word: 'Xylophone', arabic: 'إكسيلوفون', emoji: '🎵', phonics: 'X says /z/ as in Xylophone', color: '#3A0CA3' },
+  { letter: 'Y', small: 'y', word: 'Yo-yo', arabic: 'يويو', emoji: '🪀', phonics: 'Y says /j/ as in Yo-yo', color: '#7209B7' },
+  { letter: 'Z', small: 'z', word: 'Zebra', arabic: 'حمار وحشي', emoji: '🦓', phonics: 'Z says /z/ as in Zebra', color: '#F72585' }
+];
+
+const NUMBERS_DATA = [
+  { num: 1, word: 'One', arabic: 'واحد', emoji: '⭐', count: 1 },
+  { num: 2, word: 'Two', arabic: 'اثنان', emoji: '🎈', count: 2 },
+  { num: 3, word: 'Three', arabic: 'ثلاثة', emoji: '🍎', count: 3 },
+  { num: 4, word: 'Four', arabic: 'أربعة', emoji: '🚗', count: 4 },
+  { num: 5, word: 'Five', arabic: 'خمسة', emoji: '🐱', count: 5 },
+  { num: 6, word: 'Six', arabic: 'ستة', emoji: '🌸', count: 6 },
+  { num: 7, word: 'Seven', arabic: 'سبعة', emoji: '🍓', count: 7 },
+  { num: 8, word: 'Eight', arabic: 'ثمانية', emoji: '⚽', count: 8 },
+  { num: 9, word: 'Nine', arabic: 'تسعة', emoji: '🦋', count: 9 },
+  { num: 10, word: 'Ten', arabic: 'عشرة', emoji: '🌟', count: 10 },
+  { num: 11, word: 'Eleven', arabic: 'أحد عشر', emoji: '🍭', count: 11 },
+  { num: 12, word: 'Twelve', arabic: 'اثنا عشر', emoji: '🎁', count: 12 },
+  { num: 13, word: 'Thirteen', arabic: 'ثلاثة عشر', emoji: '🍩', count: 13 },
+  { num: 14, word: 'Fourteen', arabic: 'أربعة عشر', emoji: '🚀', count: 14 },
+  { num: 15, word: 'Fifteen', arabic: 'خمسة عشر', emoji: '🧁', count: 15 },
+  { num: 16, word: 'Sixteen', arabic: 'ستة عشر', emoji: '🍇', count: 16 },
+  { num: 17, word: 'Seventeen', arabic: 'سبعة عشر', emoji: '🧸', count: 17 },
+  { num: 18, word: 'Eighteen', arabic: 'ثمانية عشر', emoji: '🍉', count: 18 },
+  { num: 19, word: 'Nineteen', arabic: 'تسعة عشر', emoji: '🌈', count: 19 },
+  { num: 20, word: 'Twenty', arabic: 'عشرون', emoji: '👑', count: 20 }
+];
+
+const ANIMALS_DATA = [
+  { word: 'Lion', arabic: 'أسد', emoji: '🦁', category: 'Wild', sound: 'Roar!', bg: '#FFE8D6' },
+  { word: 'Elephant', arabic: 'فيل', emoji: '🐘', category: 'Wild', sound: 'Pawoo!', bg: '#E8E8E4' },
+  { word: 'Monkey', arabic: 'قرد', emoji: '🐵', category: 'Wild', sound: 'Ooh ooh aah aah!', bg: '#D8E2DC' },
+  { word: 'Giraffe', arabic: 'زرافة', emoji: '🦒', category: 'Wild', sound: 'Tall and quiet!', bg: '#FFF1E6' },
+  { word: 'Tiger', arabic: 'نمر', emoji: '🐯', category: 'Wild', sound: 'Growl!', bg: '#FFD7BA' },
+  { word: 'Bear', arabic: 'دب', emoji: '🐻', category: 'Wild', sound: 'Grrr!', bg: '#FCD5CE' },
+  { word: 'Zebra', arabic: 'حمار وحشي', emoji: '🦓', category: 'Wild', sound: 'Neigh!', bg: '#E2E2E2' },
+  { word: 'Dog', arabic: 'كلب', emoji: '🐶', category: 'Farm', sound: 'Woof woof!', bg: '#F8EDEB' },
+  { word: 'Cat', arabic: 'قطة', emoji: '🐱', category: 'Farm', sound: 'Meow meow!', bg: '#FFE5EC' },
+  { word: 'Rabbit', arabic: 'أرنب', emoji: '🐰', category: 'Farm', sound: 'Hop hop!', bg: '#F0E6EF' },
+  { word: 'Cow', arabic: 'بقرة', emoji: '🐮', category: 'Farm', sound: 'Moo moo!', bg: '#E7ECEF' },
+  { word: 'Sheep', arabic: 'خروف', emoji: '🐑', category: 'Farm', sound: 'Baa baa!', bg: '#E9ECEF' },
+  { word: 'Horse', arabic: 'حصان', emoji: '🐴', category: 'Farm', sound: 'Neigh neigh!', bg: '#FDE2E4' },
+  { word: 'Duck', arabic: 'بطة', emoji: '🦆', category: 'Farm', sound: 'Quack quack!', bg: '#FFF0F5' },
+  { word: 'Dolphin', arabic: 'دلفين', emoji: '🐬', category: 'Sea', sound: 'Click click!', bg: '#E0FAFF' },
+  { word: 'Whale', arabic: 'حوت', emoji: '🐋', category: 'Sea', sound: 'Singing in the ocean!', bg: '#D0F0FD' },
+  { word: 'Fish', arabic: 'سمكة', emoji: '🐟', category: 'Sea', sound: 'Blub blub!', bg: '#CAF0F8' },
+  { word: 'Penguin', arabic: 'بطريق', emoji: '🐧', category: 'Sea', sound: 'Waddle waddle!', bg: '#EDF2F4' },
+  { word: 'Butterfly', arabic: 'فراشة', emoji: '🦋', category: 'Insects', sound: 'Flutter flutter!', bg: '#E8DFF5' },
+  { word: 'Bee', arabic: 'نحلة', emoji: '🐝', category: 'Insects', sound: 'Buzzz buzzz!', bg: '#FCF6BD' }
+];
+
+const COLORS_DATA = [
+  { word: 'Red', arabic: 'أحمر', hex: '#EF476F', emoji: '🍓', example: 'Red Strawberry' },
+  { word: 'Blue', arabic: 'أزرق', hex: '#118AB2', emoji: '🌊', example: 'Blue Ocean' },
+  { word: 'Green', arabic: 'أخضر', hex: '#06D6A0', emoji: '🍃', example: 'Green Leaf' },
+  { word: 'Yellow', arabic: 'أصفر', hex: '#FFD166', emoji: '☀️', example: 'Yellow Sun' },
+  { word: 'Orange', arabic: 'برتقالي', hex: '#F77F00', emoji: '🍊', example: 'Orange Fruit' },
+  { word: 'Purple', arabic: 'بنفسجي', hex: '#7209B7', emoji: '🍇', example: 'Purple Grapes' },
+  { word: 'Pink', arabic: 'وردي', hex: '#F72585', emoji: '🌸', example: 'Pink Flower' },
+  { word: 'Brown', arabic: 'بني', hex: '#7F4F24', emoji: '🐻', example: 'Brown Bear' },
+  { word: 'Black', arabic: 'أسود', hex: '#212529', emoji: '🐈‍⬛', example: 'Black Cat' },
+  { word: 'White', arabic: 'أبيض', hex: '#F8F9FA', border: '#CED4DA', emoji: '🐑', example: 'White Sheep' }
+];
+
+const SHAPES_DATA = [
+  { word: 'Circle', arabic: 'دائرة', emoji: '⭕', desc: 'Round and smooth like the sun' },
+  { word: 'Square', arabic: 'مربع', emoji: '⏹️', desc: 'Four equal sides' },
+  { word: 'Triangle', arabic: 'مثلث', emoji: '🔺', desc: 'Three pointy corners' },
+  { word: 'Star', arabic: 'نجمة', emoji: '⭐', desc: 'Twinkling in the night sky' },
+  { word: 'Heart', arabic: 'قلب', emoji: '❤️', desc: 'Symbol of love and kindness' },
+  { word: 'Rectangle', arabic: 'مستطيل', emoji: '🚪', desc: 'Shaped like a tall door' },
+  { word: 'Diamond', arabic: 'معين / ماسة', emoji: '💎', desc: 'Shining like a kite' },
+  { word: 'Oval', arabic: 'بيضاوي', emoji: '🥚', desc: 'Shaped like an egg' }
+];
+
+const FRUITS_DATA = [
+  { word: 'Apple', arabic: 'تفاحة', emoji: '🍎', color: '#FF4D6D' },
+  { word: 'Banana', arabic: 'موز', emoji: '🍌', color: '#FFE169' },
+  { word: 'Orange', arabic: 'برتقال', emoji: '🍊', color: '#FF9F1C' },
+  { word: 'Strawberry', arabic: 'فراولة', emoji: '🍓', color: '#E63946' },
+  { word: 'Watermelon', arabic: 'بطيخ', emoji: '🍉', color: '#38B000' },
+  { word: 'Grapes', arabic: 'عنب', emoji: '🍇', color: '#7B2CBF' },
+  { word: 'Pineapple', arabic: 'أناناس', emoji: '🍍', color: '#FFB703' },
+  { word: 'Mango', arabic: 'مانجو', emoji: '🥭', color: '#FB8500' },
+  { word: 'Peach', arabic: 'خوخ', emoji: '🍑', color: '#F4A261' },
+  { word: 'Cherry', arabic: 'كرز', emoji: '🍒', color: '#D90429' },
+  { word: 'Lemon', arabic: 'ليمون', emoji: '🍋', color: '#E9D8A6' },
+  { word: 'Kiwi', arabic: 'كيوي', emoji: '🥝', color: '#55A630' }
+];
+
+const SPELLING_WORDS = [
+  { word: 'CAT', arabic: 'قطة', emoji: '🐱', hint: 'Cute little pet that purrs' },
+  { word: 'DOG', arabic: 'كلب', emoji: '🐶', hint: 'Man\'s best friend' },
+  { word: 'SUN', arabic: 'شمس', emoji: '☀️', hint: 'Shines bright in the sky' },
+  { word: 'BEE', arabic: 'نحلة', emoji: '🐝', hint: 'Makes sweet honey' },
+  { word: 'CAR', arabic: 'سيارة', emoji: '🚗', hint: 'Drives on the road' },
+  { word: 'HAT', arabic: 'قبعة', emoji: '🎩', hint: 'You wear it on your head' },
+  { word: 'PEN', arabic: 'قلم', emoji: '🖊️', hint: 'Used for writing' },
+  { word: 'FOX', arabic: 'ثعلب', emoji: '🦊', hint: 'Clever wild animal' },
+  { word: 'PIG', arabic: 'خنزير وردي', emoji: '🐷', hint: 'Farm animal that says oink' },
+  { word: 'BUS', arabic: 'حافلة', emoji: '🚌', hint: 'Big yellow school vehicle' },
+  { word: 'BAT', arabic: 'خفاش', emoji: '🦇', hint: 'Flies at night' },
+  { word: 'OWL', arabic: 'بومة', emoji: '🦉', hint: 'Wise bird with big eyes' }
+];
