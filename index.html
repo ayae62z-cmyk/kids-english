@@ -43,6 +43,11 @@
         <button type="button" class="btn-icon" id="soundToggleBtn" onclick="toggleSound()" title="تشغيل / كتم الصوت">
           🔊
         </button>
+
+        <!-- Admin Control Button -->
+        <button type="button" class="btn-admin-header" onclick="LingoAdmin.openPanel()" title="لوحة إدارة المحتوى الكاملة (إضافة، تعديل، حذف)">
+          ⚙️ إدارة المحتوى
+        </button>
       </div>
 
     </div>
@@ -80,6 +85,9 @@
       </button>
       <button class="nav-pill gold" data-view="certificate" onclick="openCertificateModal()">
         <span>🏆</span> شهادة الإنجاز
+      </button>
+      <button class="nav-pill admin-nav-pill" onclick="LingoAdmin.openPanel()" title="إدارة وحذف وإضافة وتعديل العناصر">
+        <span>⚙️</span> إدارة المحتوى
       </button>
     </div>
   </nav>
@@ -231,6 +239,18 @@
           </div>
         </div>
 
+        <!-- Content Management Card -->
+        <div class="world-card c-admin" onclick="LingoAdmin.openPanel()">
+          <div class="world-top">
+            <span class="world-badge" style="background: #EDE9FE; color: #6D28D9;">تحكم كامل ⚙️</span>
+            <div class="world-emoji">🎛️</div>
+          </div>
+          <div class="world-bottom">
+            <h3>لوحة إدارة المحتوى (Manage Content)</h3>
+            <p>تحكم كامل بإضافة، تعديل، وحذف أي كلمة، رقم، حرف، فيديو أو عبارة بكل سهولة!</p>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -239,8 +259,21 @@
          ==================================================================== -->
     <section class="view-section" id="view-alphabet">
       <div class="section-banner">
-        <h2>🔤 الحروف الهجائية الإنجليزية (Alphabet A - Z)</h2>
-        <p>انقر على أي بطاقة لتستمع إلى صوت الحرف والكلمة المصورة بصوت نقي!</p>
+        <div class="banner-text-block">
+          <h2>🔤 الحروف الهجائية الإنجليزية (Alphabet A - Z)</h2>
+          <p>انقر على أي بطاقة لتستمع إلى صوت الحرف والكلمة المصورة بصوت نقي!</p>
+        </div>
+        <div class="world-manage-bar">
+          <button type="button" class="btn-quick-add" onclick="LingoAdmin.openAddModal('alphabet')">
+            <span>➕</span> إضافة حرف جديد
+          </button>
+          <button type="button" class="btn-quick-edit-toggle" onclick="LingoAdmin.toggleQuickEditMode()">
+            ✏️ وضع التعديل السريع: <span class="status-off">معطّل</span>
+          </button>
+          <button type="button" class="btn-quick-panel" onclick="LingoAdmin.openPanel('alphabet')">
+            <span>⚙️</span> إدارة القسم
+          </button>
+        </div>
       </div>
 
       <div class="alphabet-grid" id="alphabetGrid"></div>
@@ -251,8 +284,21 @@
          ==================================================================== -->
     <section class="view-section" id="view-numbers">
       <div class="section-banner">
-        <h2>🔢 الأرقام والعد (Numbers 1 - 20)</h2>
-        <p>انقر على أي رقم لتسمع نطقه بالإنجليزي وتعد العناصر التفاعلية معه!</p>
+        <div class="banner-text-block">
+          <h2>🔢 الأرقام والعد (Numbers 1 - 20)</h2>
+          <p>انقر على أي رقم لتسمع نطقه بالإنجليزي وتعد العناصر التفاعلية معه!</p>
+        </div>
+        <div class="world-manage-bar">
+          <button type="button" class="btn-quick-add" onclick="LingoAdmin.openAddModal('numbers')">
+            <span>➕</span> إضافة رقم جديد
+          </button>
+          <button type="button" class="btn-quick-edit-toggle" onclick="LingoAdmin.toggleQuickEditMode()">
+            ✏️ وضع التعديل السريع: <span class="status-off">معطّل</span>
+          </button>
+          <button type="button" class="btn-quick-panel" onclick="LingoAdmin.openPanel('numbers')">
+            <span>⚙️</span> إدارة القسم
+          </button>
+        </div>
       </div>
 
       <div class="numbers-grid" id="numbersGrid"></div>
@@ -263,8 +309,21 @@
          ==================================================================== -->
     <section class="view-section" id="view-animals">
       <div class="section-banner">
-        <h2>🦁 مملكة الحيوانات (Animal Kingdom)</h2>
-        <p>استمع لأصماء الحيوانات باللغة الإنجليزية واكتشف أصواتها المرحة!</p>
+        <div class="banner-text-block">
+          <h2>🦁 مملكة الحيوانات (Animal Kingdom)</h2>
+          <p>استمع لأصماء الحيوانات باللغة الإنجليزية واكتشف أصواتها المرحة!</p>
+        </div>
+        <div class="world-manage-bar">
+          <button type="button" class="btn-quick-add" onclick="LingoAdmin.openAddModal('animals')">
+            <span>➕</span> إضافة حيوان جديد
+          </button>
+          <button type="button" class="btn-quick-edit-toggle" onclick="LingoAdmin.toggleQuickEditMode()">
+            ✏️ وضع التعديل السريع: <span class="status-off">معطّل</span>
+          </button>
+          <button type="button" class="btn-quick-panel" onclick="LingoAdmin.openPanel('animals')">
+            <span>⚙️</span> إدارة القسم
+          </button>
+        </div>
       </div>
 
       <div class="items-grid" id="animalsGrid"></div>
@@ -275,8 +334,24 @@
          ==================================================================== -->
     <section class="view-section" id="view-colors">
       <div class="section-banner">
-        <h2>🎨 الألوان والأشكال (Colors & Shapes)</h2>
-        <p>تعلم نطق الألوان الزاهية والأشكال الهندسية اليومية بالإنجليزية</p>
+        <div class="banner-text-block">
+          <h2>🎨 الألوان والأشكال (Colors & Shapes)</h2>
+          <p>تعلم نطق الألوان الزاهية والأشكال الهندسية اليومية بالإنجليزية</p>
+        </div>
+        <div class="world-manage-bar">
+          <button type="button" class="btn-quick-add" onclick="LingoAdmin.openAddModal('colors')">
+            <span>➕</span> إضافة لون جديد
+          </button>
+          <button type="button" class="btn-quick-add" onclick="LingoAdmin.openAddModal('shapes')">
+            <span>➕</span> إضافة شكل جديد
+          </button>
+          <button type="button" class="btn-quick-edit-toggle" onclick="LingoAdmin.toggleQuickEditMode()">
+            ✏️ وضع التعديل السريع: <span class="status-off">معطّل</span>
+          </button>
+          <button type="button" class="btn-quick-panel" onclick="LingoAdmin.openPanel('colors')">
+            <span>⚙️</span> إدارة القسم
+          </button>
+        </div>
       </div>
 
       <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin: 1.5rem 0 1rem;">الألوان (Colors):</h3>
@@ -291,8 +366,21 @@
          ==================================================================== -->
     <section class="view-section" id="view-fruits">
       <div class="section-banner">
-        <h2>🍎 حديقة الفواكه (Delicious Fruits)</h2>
-        <p>انقر على الفاكهة اللذيذة لتسمع اسمها بالإنجليزي وتجمع النجوم!</p>
+        <div class="banner-text-block">
+          <h2>🍎 حديقة الفواكه (Delicious Fruits)</h2>
+          <p>انقر على الفاكهة اللذيذة لتسمع اسمها بالإنجليزي وتجمع النجوم!</p>
+        </div>
+        <div class="world-manage-bar">
+          <button type="button" class="btn-quick-add" onclick="LingoAdmin.openAddModal('fruits')">
+            <span>➕</span> إضافة فاكهة جديدة
+          </button>
+          <button type="button" class="btn-quick-edit-toggle" onclick="LingoAdmin.toggleQuickEditMode()">
+            ✏️ وضع التعديل السريع: <span class="status-off">معطّل</span>
+          </button>
+          <button type="button" class="btn-quick-panel" onclick="LingoAdmin.openPanel('fruits')">
+            <span>⚙️</span> إدارة القسم
+          </button>
+        </div>
       </div>
 
       <div class="items-grid" id="fruitsGrid"></div>
@@ -303,8 +391,21 @@
          ==================================================================== -->
     <section class="view-section" id="view-phrases">
       <div class="section-banner">
-        <h2>💬 عالم المحادثات والعبارات اليومية (Daily Phrases)</h2>
-        <p>انقر على أي بطاقة لتستمع للنطق الصوتي الإنجليزي بوضوح وتتحدث بثقة! 🌟</p>
+        <div class="banner-text-block">
+          <h2>💬 عالم المحادثات والعبارات اليومية (Daily Phrases)</h2>
+          <p>انقر على أي بطاقة لتستمع للنطق الصوتي الإنجليزي بوضوح وتتحدث بثقة! 🌟</p>
+        </div>
+        <div class="world-manage-bar">
+          <button type="button" class="btn-quick-add" onclick="LingoAdmin.openAddModal('phrases')">
+            <span>➕</span> إضافة عبارة جديدة
+          </button>
+          <button type="button" class="btn-quick-edit-toggle" onclick="LingoAdmin.toggleQuickEditMode()">
+            ✏️ وضع التعديل السريع: <span class="status-off">معطّل</span>
+          </button>
+          <button type="button" class="btn-quick-panel" onclick="LingoAdmin.openPanel('phrases')">
+            <span>⚙️</span> إدارة القسم
+          </button>
+        </div>
       </div>
 
       <!-- Category Filter Pills -->
@@ -324,8 +425,21 @@
          ==================================================================== -->
     <section class="view-section" id="view-videos">
       <div class="section-banner">
-        <h2>🎬 سينما لنجوبي التعليمية (LingoBee Cinema)</h2>
-        <p>شاهد أروع الأناشيد والرسوم المتحركة لتعلم الإنجليزية واكسب +5 ⭐ نجوم مع كل فيديو تشاهده! 🍿</p>
+        <div class="banner-text-block">
+          <h2>🎬 سينما لنجوبي التعليمية (LingoBee Cinema)</h2>
+          <p>شاهد أروع الأناشيد والرسوم المتحركة لتعلم الإنجليزية واكسب +5 ⭐ نجوم مع كل فيديو تشاهده! 🍿</p>
+        </div>
+        <div class="world-manage-bar">
+          <button type="button" class="btn-quick-add" onclick="LingoAdmin.openAddModal('videos')">
+            <span>➕</span> إضافة فيديو تعليمي جديد
+          </button>
+          <button type="button" class="btn-quick-edit-toggle" onclick="LingoAdmin.toggleQuickEditMode()">
+            ✏️ وضع التعديل السريع: <span class="status-off">معطّل</span>
+          </button>
+          <button type="button" class="btn-quick-panel" onclick="LingoAdmin.openPanel('videos')">
+            <span>⚙️</span> إدارة الفيديوهات
+          </button>
+        </div>
       </div>
 
       <!-- Video Filter Pills -->
@@ -617,6 +731,146 @@
           العودة للسينما والمتابعة 🚀
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       Admin Control Panel Modal (لوحة تحكم وإدارة المحتوى الشاملة)
+       ==================================================================== -->
+  <div class="modal-overlay admin-modal-overlay" id="adminPanelModal" onclick="LingoAdmin.closePanel()">
+    <div class="admin-modal-dialog" onclick="event.stopPropagation()">
+      
+      <!-- Modal Header -->
+      <div class="admin-modal-header">
+        <div class="admin-brand-info">
+          <span class="admin-icon">⚙️</span>
+          <div>
+            <h3>لوحة تحكم LINGOBEE وإدارة المحتوى الشاملة</h3>
+            <p>أضف، عدّل، واحذف أي عنصر في أي قسم من أقسام المنصة بكل حرية وسهولة!</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="LingoAdmin.closePanel()" title="إغلاق">✕</button>
+      </div>
+
+      <!-- Quick Category Tabs -->
+      <div class="admin-category-tabs" id="adminCategoryTabs">
+        <!-- Injected dynamically via JS -->
+      </div>
+
+      <!-- Sub Header & Action Bar -->
+      <div class="admin-toolbar">
+        <div class="admin-search-box">
+          <span>🔍</span>
+          <input type="text" id="adminSearchInput" placeholder="ابحث عن أي عنصر في هذا القسم بالإنجليزية أو بالعربية..." oninput="LingoAdmin.filterTable()">
+        </div>
+        <div class="admin-action-buttons">
+          <button type="button" class="btn-admin-add" onclick="LingoAdmin.openAddModal()">
+            <span>➕</span> إضافة عنصر جديد
+          </button>
+        </div>
+      </div>
+
+      <!-- Content Table / Card Container -->
+      <div class="admin-table-container">
+        <table class="admin-data-table" id="adminDataTable">
+          <thead>
+            <tr>
+              <th style="width: 70px; text-align: center;">الرمز</th>
+              <th>الكلمة / العنوان (EN)</th>
+              <th>الترجمة / المعنى (AR)</th>
+              <th>تفاصيل إضافية</th>
+              <th style="width: 90px; text-align: center;">النطق</th>
+              <th style="width: 140px; text-align: center;">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+        <div class="admin-empty-state" id="adminEmptyState" style="display: none;">
+          <span>🔍</span>
+          <h4>لا توجد عناصر مطابقة لبحثك</h4>
+          <p>يمكنك إضافة عنصر جديد بالنقر على زر "إضافة عنصر جديد" بالأعلى.</p>
+        </div>
+      </div>
+
+      <!-- Modal Footer with Power Tools -->
+      <div class="admin-modal-footer">
+        <div class="admin-footer-left">
+          <button type="button" class="btn-admin-secondary" onclick="LingoAdmin.resetCurrentCategory()" title="إرجاع عناصر هذا القسم للوضع الافتراضي">
+            🔄 استعادة هذا القسم للافتراضي
+          </button>
+          <button type="button" class="btn-admin-secondary text-danger" onclick="LingoAdmin.resetAllCategories()" title="إرجاع كافة أقسام المنصة للمحتوى الأصلي">
+            ⚠️ استعادة كل المنصة للافتراضي
+          </button>
+        </div>
+        <div class="admin-footer-right">
+          <button type="button" class="btn-admin-backup" onclick="LingoAdmin.exportBackup()" title="تحميل ملف نسخة احتياطية بكل المحتوى المعدل">
+            📥 تصدير نسخة (JSON)
+          </button>
+          <button type="button" class="btn-admin-backup" onclick="document.getElementById('adminImportFileInput').click()" title="استرجاع نسخة محفوظة مسبقاً">
+            📤 استيراد نسخة
+          </button>
+          <input type="file" id="adminImportFileInput" style="display: none;" accept=".json" onchange="LingoAdmin.importBackup(event)">
+          <button type="button" class="btn-admin-close" onclick="LingoAdmin.closePanel()">
+            إغلاق
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       Dynamic Item Add / Edit Modal (نافذة إضافة وتعديل عنصر)
+       ==================================================================== -->
+  <div class="modal-overlay admin-modal-overlay" id="adminItemModal" onclick="LingoAdmin.closeItemModal()">
+    <div class="admin-item-dialog" onclick="event.stopPropagation()">
+      
+      <div class="admin-item-header">
+        <div class="item-title-box">
+          <span class="item-header-icon" id="adminItemHeaderIcon">✏️</span>
+          <div>
+            <h3 id="adminItemModalTitle">إضافة عنصر جديد</h3>
+            <p id="adminItemModalSubtitle">أدخل البيانات أدناه ليتم حفظها ونطقها فوراً</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="LingoAdmin.closeItemModal()">✕</button>
+      </div>
+
+      <!-- Item Form Container -->
+      <form id="adminItemForm" onsubmit="event.preventDefault(); LingoAdmin.saveItem();">
+        <input type="hidden" id="adminItemCategory" value="alphabet">
+        <input type="hidden" id="adminItemIndex" value="-1">
+
+        <div class="admin-form-grid" id="adminFormGrid">
+          <!-- Injected dynamically based on category fields schema -->
+        </div>
+
+        <!-- Voice Test Preview Bar inside Form -->
+        <div class="admin-form-voice-preview">
+          <div class="voice-preview-info">
+            <span>🔊</span>
+            <div>
+              <strong>اختبار النطق الصوتي الفوري:</strong>
+              <small>انقر لتسمع كيف سينطق التطبيق الكلمة للطفل</small>
+            </div>
+          </div>
+          <button type="button" class="btn-test-speech" onclick="LingoAdmin.testCurrentFormSpeech()">
+            🔊 جرّب النطق الآن
+          </button>
+        </div>
+
+        <div class="admin-item-footer">
+          <button type="submit" class="btn-admin-save">
+            💾 حفظ التغييرات فوراً
+          </button>
+          <button type="button" class="btn-admin-cancel" onclick="LingoAdmin.closeItemModal()">
+            إلغاء
+          </button>
+        </div>
+      </form>
+
     </div>
   </div>
 

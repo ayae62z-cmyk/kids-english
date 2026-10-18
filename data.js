@@ -1,11 +1,12 @@
 /**
  * ==========================================================================
- * LINGOBEE - Data Bank & Vocabulary Modules
- * منصة لينجوبي - بنك البيانات والكلمات التعليمية للأطفال
+ * LINGOBEE - Data Bank & Dynamic Content Management System
+ * منصة لينجوبي - بنك البيانات، المحتوى الافتراضي، ونظام التخزين الديناميكي
  * ==========================================================================
  */
 
-const ALPHABET_DATA = [
+// 1. Default Content Bank (المحتوى التأسيسي الافتراضي)
+const DEFAULT_ALPHABET_DATA = [
   { letter: 'A', small: 'a', word: 'Apple', arabic: 'تفاحة', emoji: '🍎', phonics: 'A says /æ/ as in Apple', color: '#FF6B6B' },
   { letter: 'B', small: 'b', word: 'Bear', arabic: 'دب', emoji: '🐻', phonics: 'B says /b/ as in Bear', color: '#4ECDC4' },
   { letter: 'C', small: 'c', word: 'Cat', arabic: 'قطة', emoji: '🐱', phonics: 'C says /k/ as in Cat', color: '#FFE66D' },
@@ -34,7 +35,7 @@ const ALPHABET_DATA = [
   { letter: 'Z', small: 'z', word: 'Zebra', arabic: 'حمار وحشي', emoji: '🦓', phonics: 'Z says /z/ as in Zebra', color: '#F72585' }
 ];
 
-const NUMBERS_DATA = [
+const DEFAULT_NUMBERS_DATA = [
   { num: 1, word: 'One', arabic: 'واحد', emoji: '⭐', count: 1 },
   { num: 2, word: 'Two', arabic: 'اثنان', emoji: '🎈', count: 2 },
   { num: 3, word: 'Three', arabic: 'ثلاثة', emoji: '🍎', count: 3 },
@@ -57,7 +58,7 @@ const NUMBERS_DATA = [
   { num: 20, word: 'Twenty', arabic: 'عشرون', emoji: '👑', count: 20 }
 ];
 
-const ANIMALS_DATA = [
+const DEFAULT_ANIMALS_DATA = [
   { word: 'Lion', arabic: 'أسد', emoji: '🦁', category: 'Wild', sound: 'Roar!', bg: '#FFE8D6' },
   { word: 'Elephant', arabic: 'فيل', emoji: '🐘', category: 'Wild', sound: 'Pawoo!', bg: '#E8E8E4' },
   { word: 'Monkey', arabic: 'قرد', emoji: '🐵', category: 'Wild', sound: 'Ooh ooh aah aah!', bg: '#D8E2DC' },
@@ -80,7 +81,7 @@ const ANIMALS_DATA = [
   { word: 'Bee', arabic: 'نحلة', emoji: '🐝', category: 'Insects', sound: 'Buzzz buzzz!', bg: '#FCF6BD' }
 ];
 
-const COLORS_DATA = [
+const DEFAULT_COLORS_DATA = [
   { word: 'Red', arabic: 'أحمر', hex: '#EF476F', emoji: '🍓', example: 'Red Strawberry' },
   { word: 'Blue', arabic: 'أزرق', hex: '#118AB2', emoji: '🌊', example: 'Blue Ocean' },
   { word: 'Green', arabic: 'أخضر', hex: '#06D6A0', emoji: '🍃', example: 'Green Leaf' },
@@ -93,7 +94,7 @@ const COLORS_DATA = [
   { word: 'White', arabic: 'أبيض', hex: '#F8F9FA', border: '#CED4DA', emoji: '🐑', example: 'White Sheep' }
 ];
 
-const SHAPES_DATA = [
+const DEFAULT_SHAPES_DATA = [
   { word: 'Circle', arabic: 'دائرة', emoji: '⭕', desc: 'Round and smooth like the sun' },
   { word: 'Square', arabic: 'مربع', emoji: '⏹️', desc: 'Four equal sides' },
   { word: 'Triangle', arabic: 'مثلث', emoji: '🔺', desc: 'Three pointy corners' },
@@ -104,7 +105,7 @@ const SHAPES_DATA = [
   { word: 'Oval', arabic: 'بيضاوي', emoji: '🥚', desc: 'Shaped like an egg' }
 ];
 
-const FRUITS_DATA = [
+const DEFAULT_FRUITS_DATA = [
   { word: 'Apple', arabic: 'تفاحة', emoji: '🍎', color: '#FF4D6D' },
   { word: 'Banana', arabic: 'موز', emoji: '🍌', color: '#FFE169' },
   { word: 'Orange', arabic: 'برتقال', emoji: '🍊', color: '#FF9F1C' },
@@ -119,9 +120,9 @@ const FRUITS_DATA = [
   { word: 'Kiwi', arabic: 'كيوي', emoji: '🥝', color: '#55A630' }
 ];
 
-const SPELLING_WORDS = [
+const DEFAULT_SPELLING_WORDS = [
   { word: 'CAT', arabic: 'قطة', emoji: '🐱', hint: 'Cute little pet that purrs' },
-  { word: 'DOG', arabic: 'كلب', emoji: '🐶', hint: 'Man\'s best friend' },
+  { word: 'DOG', arabic: 'كلب', emoji: '🐶', hint: "Man's best friend" },
   { word: 'SUN', arabic: 'شمس', emoji: '☀️', hint: 'Shines bright in the sky' },
   { word: 'BEE', arabic: 'نحلة', emoji: '🐝', hint: 'Makes sweet honey' },
   { word: 'CAR', arabic: 'سيارة', emoji: '🚗', hint: 'Drives on the road' },
@@ -134,7 +135,7 @@ const SPELLING_WORDS = [
   { word: 'OWL', arabic: 'بومة', emoji: '🦉', hint: 'Wise bird with big eyes' }
 ];
 
-const DAILY_PHRASES_DATA = [
+const DEFAULT_DAILY_PHRASES_DATA = [
   // 1. Greetings & Farewells (التحيات والوداع)
   { phrase: 'Hello!', arabic: 'مرحباً!', emoji: '👋', category: 'greetings', categoryAr: 'التحيات والوداع', color: '#3A86FF', pronunciation: 'هَلُو' },
   { phrase: 'Good morning!', arabic: 'صباح الخير!', emoji: '🌅', category: 'greetings', categoryAr: 'التحيات والوداع', color: '#FFB703', pronunciation: 'جُودْ مُورْنِنْغ' },
@@ -169,7 +170,7 @@ const DAILY_PHRASES_DATA = [
   { phrase: 'I love English!', arabic: 'أنا أحب تعلم الإنجليزية!', emoji: '🌟', category: 'conversation', categoryAr: 'التعارف والأسئلة', color: '#FFB703', pronunciation: 'آيْ لَفْ إِنْغْلِيش' }
 ];
 
-const VIDEOS_DATA = [
+const DEFAULT_VIDEOS_DATA = [
   {
     id: 'hq3yfQnllfQ',
     titleAr: 'أنشودة الحروف الإنجليزية اللطيفة (ABC Song)',
@@ -272,4 +273,255 @@ const VIDEOS_DATA = [
   }
 ];
 
+// ==========================================================================
+// 2. Storage Helpers & Data Persistence (نظام التخزين والاسترجاع)
+// ==========================================================================
+const LINGOBEE_STORAGE_PREFIX = 'lingobee_v2_';
 
+function getStoredData(key, defaultData) {
+  try {
+    const raw = localStorage.getItem(LINGOBEE_STORAGE_PREFIX + key);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn(`Failed to read stored ${key}:`, e);
+  }
+  return JSON.parse(JSON.stringify(defaultData));
+}
+
+function saveStoredData(key, data) {
+  try {
+    localStorage.setItem(LINGOBEE_STORAGE_PREFIX + key, JSON.stringify(data));
+    return true;
+  } catch (e) {
+    console.error(`Failed to save ${key}:`, e);
+    return false;
+  }
+}
+
+function resetStoredData(key, defaultData) {
+  try {
+    localStorage.removeItem(LINGOBEE_STORAGE_PREFIX + key);
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(defaultData));
+}
+
+// Active Mutable Content Arrays (مصفوفات البيانات الحية القابلة للتعديل)
+let ALPHABET_DATA = getStoredData('alphabet', DEFAULT_ALPHABET_DATA);
+let NUMBERS_DATA = getStoredData('numbers', DEFAULT_NUMBERS_DATA);
+let ANIMALS_DATA = getStoredData('animals', DEFAULT_ANIMALS_DATA);
+let COLORS_DATA = getStoredData('colors', DEFAULT_COLORS_DATA);
+let SHAPES_DATA = getStoredData('shapes', DEFAULT_SHAPES_DATA);
+let FRUITS_DATA = getStoredData('fruits', DEFAULT_FRUITS_DATA);
+let SPELLING_WORDS = getStoredData('spelling', DEFAULT_SPELLING_WORDS);
+let DAILY_PHRASES_DATA = getStoredData('phrases', DEFAULT_DAILY_PHRASES_DATA);
+let VIDEOS_DATA = getStoredData('videos', DEFAULT_VIDEOS_DATA);
+
+// ==========================================================================
+// 3. Central Schema & Category Metadata Registry (سجل ومخطط إدارة الأقسام)
+// ==========================================================================
+const CATEGORIES_META = {
+  alphabet: {
+    id: 'alphabet',
+    nameAr: 'الحروف الهجائية',
+    nameEn: 'Alphabet',
+    emoji: '🔤',
+    color: '#FF6B6B',
+    renderFn: 'renderAlphabet',
+    getData: () => ALPHABET_DATA,
+    setData: (arr) => { ALPHABET_DATA = arr; saveStoredData('alphabet', arr); },
+    getDefaults: () => DEFAULT_ALPHABET_DATA,
+    displayKey: (item) => `${item.letter}${item.small} - ${item.word}`,
+    subKey: (item) => item.arabic,
+    fields: [
+      { id: 'letter', label: 'الحرف الكبير (Capital)', type: 'text', placeholder: 'مثال: A', required: true, width: 'half' },
+      { id: 'small', label: 'الحرف الصغير (Small)', type: 'text', placeholder: 'مثال: a', required: true, width: 'half' },
+      { id: 'word', label: 'الكلمة المصورة بالإنجليزية', type: 'text', placeholder: 'مثال: Apple', required: true, width: 'half' },
+      { id: 'arabic', label: 'الترجمة بالعربية', type: 'text', placeholder: 'مثال: تفاحة', required: true, width: 'half' },
+      { id: 'emoji', label: 'الرمز التعبيري (Emoji)', type: 'text', placeholder: 'مثال: 🍎', required: true, width: 'half' },
+      { id: 'phonics', label: 'صوت الحرف والتلميح الصوتي', type: 'text', placeholder: 'مثال: A says /æ/ as in Apple', required: false, width: 'half' },
+      { id: 'color', label: 'لون البطاقة', type: 'color', default: '#FF6B6B', width: 'full' }
+    ]
+  },
+  numbers: {
+    id: 'numbers',
+    nameAr: 'الأرقام والعد',
+    nameEn: 'Numbers',
+    emoji: '🔢',
+    color: '#FFD166',
+    renderFn: 'renderNumbers',
+    getData: () => NUMBERS_DATA,
+    setData: (arr) => { NUMBERS_DATA = arr; saveStoredData('numbers', arr); },
+    getDefaults: () => DEFAULT_NUMBERS_DATA,
+    displayKey: (item) => `${item.num} - ${item.word}`,
+    subKey: (item) => item.arabic,
+    fields: [
+      { id: 'num', label: 'الرقم (Digit)', type: 'number', placeholder: 'مثال: 1', required: true, width: 'half' },
+      { id: 'count', label: 'عدد العناصر المعروضة', type: 'number', placeholder: 'مثال: 1', required: true, width: 'half' },
+      { id: 'word', label: 'اسم الرقم بالإنجليزية', type: 'text', placeholder: 'مثال: One', required: true, width: 'half' },
+      { id: 'arabic', label: 'اسم الرقم بالعربية', type: 'text', placeholder: 'مثال: واحد', required: true, width: 'half' },
+      { id: 'emoji', label: 'الرمز التعبيري (Emoji)', type: 'text', placeholder: 'مثال: ⭐ أو 🎈', required: true, width: 'full' }
+    ]
+  },
+  animals: {
+    id: 'animals',
+    nameAr: 'مملكة الحيوانات',
+    nameEn: 'Animals',
+    emoji: '🦁',
+    color: '#06D6A0',
+    renderFn: 'renderAnimals',
+    getData: () => ANIMALS_DATA,
+    setData: (arr) => { ANIMALS_DATA = arr; saveStoredData('animals', arr); },
+    getDefaults: () => DEFAULT_ANIMALS_DATA,
+    displayKey: (item) => item.word,
+    subKey: (item) => `${item.arabic} (${item.category})`,
+    fields: [
+      { id: 'word', label: 'اسم الحيوان بالإنجليزية', type: 'text', placeholder: 'مثال: Lion', required: true, width: 'half' },
+      { id: 'arabic', label: 'الاسم بالعربية', type: 'text', placeholder: 'مثال: أسد', required: true, width: 'half' },
+      { id: 'emoji', label: 'الرمز التعبيري (Emoji)', type: 'text', placeholder: 'مثال: 🦁', required: true, width: 'half' },
+      { id: 'category', label: 'البيئة / التصنيف', type: 'select', options: [
+        { val: 'Wild', label: 'حيوان بري (Wild)' },
+        { val: 'Farm', label: 'حيوان مزرعة (Farm)' },
+        { val: 'Sea', label: 'كائن بحري (Sea)' },
+        { val: 'Insects', label: 'حشرات وطبيعة (Insects)' }
+      ], required: true, width: 'half' },
+      { id: 'sound', label: 'صوت الحيوان المرح', type: 'text', placeholder: 'مثال: Roar! أو Meow meow!', required: true, width: 'half' },
+      { id: 'bg', label: 'لون خلفية البطاقة', type: 'color', default: '#FFE8D6', width: 'half' }
+    ]
+  },
+  colors: {
+    id: 'colors',
+    nameAr: 'عالم الألوان',
+    nameEn: 'Colors',
+    emoji: '🎨',
+    color: '#8338EC',
+    renderFn: 'renderColorsAndShapes',
+    getData: () => COLORS_DATA,
+    setData: (arr) => { COLORS_DATA = arr; saveStoredData('colors', arr); },
+    getDefaults: () => DEFAULT_COLORS_DATA,
+    displayKey: (item) => item.word,
+    subKey: (item) => `${item.arabic} - ${item.example || ''}`,
+    fields: [
+      { id: 'word', label: 'اسم اللون بالإنجليزية', type: 'text', placeholder: 'مثال: Red', required: true, width: 'half' },
+      { id: 'arabic', label: 'الاسم بالعربية', type: 'text', placeholder: 'مثال: أحمر', required: true, width: 'half' },
+      { id: 'hex', label: 'درجة اللون (Hex Color)', type: 'color', default: '#EF476F', width: 'half' },
+      { id: 'emoji', label: 'الرمز التعبيري (Emoji)', type: 'text', placeholder: 'مثال: 🍓', required: true, width: 'half' },
+      { id: 'example', label: 'جملة توضيحية أو مثال', type: 'text', placeholder: 'مثال: Red Strawberry', required: true, width: 'full' }
+    ]
+  },
+  shapes: {
+    id: 'shapes',
+    nameAr: 'الأشكال الهندسية',
+    nameEn: 'Shapes',
+    emoji: '🔺',
+    color: '#3A86FF',
+    renderFn: 'renderColorsAndShapes',
+    getData: () => SHAPES_DATA,
+    setData: (arr) => { SHAPES_DATA = arr; saveStoredData('shapes', arr); },
+    getDefaults: () => DEFAULT_SHAPES_DATA,
+    displayKey: (item) => item.word,
+    subKey: (item) => item.arabic,
+    fields: [
+      { id: 'word', label: 'اسم الشكل بالإنجليزية', type: 'text', placeholder: 'مثال: Circle', required: true, width: 'half' },
+      { id: 'arabic', label: 'الاسم بالعربية', type: 'text', placeholder: 'مثال: دائرة', required: true, width: 'half' },
+      { id: 'emoji', label: 'الرمز التعبيري (Emoji)', type: 'text', placeholder: 'مثال: ⭕', required: true, width: 'full' },
+      { id: 'desc', label: 'وصف لطيف للشكل', type: 'text', placeholder: 'مثال: Round and smooth like the sun', required: true, width: 'full' }
+    ]
+  },
+  fruits: {
+    id: 'fruits',
+    nameAr: 'حديقة الفواكه',
+    nameEn: 'Fruits',
+    emoji: '🍎',
+    color: '#FB5607',
+    renderFn: 'renderFruits',
+    getData: () => FRUITS_DATA,
+    setData: (arr) => { FRUITS_DATA = arr; saveStoredData('fruits', arr); },
+    getDefaults: () => DEFAULT_FRUITS_DATA,
+    displayKey: (item) => item.word,
+    subKey: (item) => item.arabic,
+    fields: [
+      { id: 'word', label: 'اسم الفاكهة بالإنجليزية', type: 'text', placeholder: 'مثال: Apple', required: true, width: 'half' },
+      { id: 'arabic', label: 'الاسم بالعربية', type: 'text', placeholder: 'مثال: تفاحة', required: true, width: 'half' },
+      { id: 'emoji', label: 'الرمز التعبيري (Emoji)', type: 'text', placeholder: 'مثال: 🍎', required: true, width: 'half' },
+      { id: 'color', label: 'لون البطاقة', type: 'color', default: '#FF4D6D', width: 'half' }
+    ]
+  },
+  phrases: {
+    id: 'phrases',
+    nameAr: 'العبارات اليومية',
+    nameEn: 'Daily Phrases',
+    emoji: '💬',
+    color: '#4CC9F0',
+    renderFn: 'renderPhrases',
+    getData: () => DAILY_PHRASES_DATA,
+    setData: (arr) => { DAILY_PHRASES_DATA = arr; saveStoredData('phrases', arr); },
+    getDefaults: () => DEFAULT_DAILY_PHRASES_DATA,
+    displayKey: (item) => item.phrase,
+    subKey: (item) => `${item.arabic} (${item.pronunciation || ''})`,
+    fields: [
+      { id: 'phrase', label: 'العبارة بالإنجليزية', type: 'text', placeholder: 'مثال: Good morning!', required: true, width: 'half' },
+      { id: 'arabic', label: 'المعنى بالعربية', type: 'text', placeholder: 'مثال: صباح الخير!', required: true, width: 'half' },
+      { id: 'pronunciation', label: 'النطق التقريبي بالحروف العربية', type: 'text', placeholder: 'مثال: جُودْ مُورْنِنْغ', required: true, width: 'half' },
+      { id: 'emoji', label: 'الرمز التعبيري (Emoji)', type: 'text', placeholder: 'مثال: 🌅', required: true, width: 'half' },
+      { id: 'category', label: 'قسم العبارة', type: 'select', options: [
+        { val: 'greetings', label: 'التحيات والوداع (Greetings)' },
+        { val: 'manners', label: 'الكلمات السحرية والتهذيب (Manners)' },
+        { val: 'feelings', label: 'المشاعر والأحوال (Feelings)' },
+        { val: 'conversation', label: 'التعارف والأسئلة (Conversation)' }
+      ], required: true, width: 'half' },
+      { id: 'color', label: 'لون البطاقة', type: 'color', default: '#3A86FF', width: 'half' }
+    ]
+  },
+  videos: {
+    id: 'videos',
+    nameAr: 'الفيديوهات التعليمية',
+    nameEn: 'Educational Videos',
+    emoji: '🎬',
+    color: '#EF4444',
+    renderFn: 'renderVideos',
+    getData: () => VIDEOS_DATA,
+    setData: (arr) => { VIDEOS_DATA = arr; saveStoredData('videos', arr); },
+    getDefaults: () => DEFAULT_VIDEOS_DATA,
+    displayKey: (item) => item.titleAr,
+    subKey: (item) => `${item.titleEn} (${item.duration})`,
+    fields: [
+      { id: 'id', label: 'رابط يوتيوب أو معرّف الفيديو (YouTube Link or ID)', type: 'text', placeholder: 'مثال: https://www.youtube.com/watch?v=0VLxWIHRD4E أو 0VLxWIHRD4E', required: true, width: 'full' },
+      { id: 'titleAr', label: 'العنوان بالعربية', type: 'text', placeholder: 'مثال: أنشودة الأرقام والعد 1 إلى 20', required: true, width: 'half' },
+      { id: 'titleEn', label: 'العنوان بالإنجليزية', type: 'text', placeholder: 'مثال: Numbers Song 1 to 20', required: true, width: 'half' },
+      { id: 'category', label: 'قسم الفيديو', type: 'select', options: [
+        { val: 'alphabet', label: 'الحروف الهجائية 🔤' },
+        { val: 'numbers', label: 'الأرقام والعد 🔢' },
+        { val: 'colors', label: 'الألوان والأشكال 🎨' },
+        { val: 'animals', label: 'مملكة الحيوانات 🦁' },
+        { val: 'phrases', label: 'العبارات والتحيات 💬' }
+      ], required: true, width: 'half' },
+      { id: 'duration', label: 'مدة الفيديو (مثال: 3:20)', type: 'text', placeholder: 'مثال: 3:20', required: true, width: 'half' },
+      { id: 'emoji', label: 'الرمز التعبيري (Emoji)', type: 'text', placeholder: 'مثال: 🔢', required: true, width: 'half' },
+      { id: 'desc', label: 'وصف ملخص لمحتوى الفيديو', type: 'text', placeholder: 'مثال: أنشودة ممتعة ومتحركة لتعليم الأطفال العد من 1 حتى 20', required: true, width: 'full' }
+    ]
+  },
+  spelling: {
+    id: 'spelling',
+    nameAr: 'كلمات لعبة التهجئة',
+    nameEn: 'Spelling Words',
+    emoji: '🔠',
+    color: '#10B981',
+    renderFn: null,
+    getData: () => SPELLING_WORDS,
+    setData: (arr) => { SPELLING_WORDS = arr; saveStoredData('spelling', arr); },
+    getDefaults: () => DEFAULT_SPELLING_WORDS,
+    displayKey: (item) => item.word,
+    subKey: (item) => `${item.arabic} - ${item.hint}`,
+    fields: [
+      { id: 'word', label: 'الكلمة بأحرف كبيرة (CAPITAL)', type: 'text', placeholder: 'مثال: CAT أو BIRD', required: true, width: 'half' },
+      { id: 'arabic', label: 'المعنى بالعربية', type: 'text', placeholder: 'مثال: قطة', required: true, width: 'half' },
+      { id: 'emoji', label: 'الرمز التعبيري (Emoji)', type: 'text', placeholder: 'مثال: 🐱', required: true, width: 'half' },
+      { id: 'hint', label: 'تلميح لطيف للطفل', type: 'text', placeholder: 'مثال: Cute little pet that purrs', required: true, width: 'half' }
+    ]
+  }
+};

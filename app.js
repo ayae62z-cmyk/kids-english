@@ -16,6 +16,38 @@ let memoryFlipped = [];
 let memoryMatchedCount = 0;
 let currentSpellingWord = null;
 let currentSpellingInput = [];
+let quickEditMode = false;
+let currentPhraseFilter = 'all';
+
+function extractYouTubeId(urlOrId) {
+  if (!urlOrId) return '';
+  const str = urlOrId.trim();
+  if (/^[a-zA-Z0-9_-]{11}$/.test(str)) {
+    return str;
+  }
+  const match = str.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/i);
+  return match ? match[1] : str;
+}
+
+function attachCardAdminActions(card, category, realIndex) {
+  if (!quickEditMode) return;
+  card.classList.add('in-edit-mode');
+  const actionsWrap = document.createElement('div');
+  actionsWrap.className = 'card-admin-actions';
+  actionsWrap.innerHTML = `
+    <button type="button" class="btn-card-edit" title="تعديل هذا العنصر">✏️</button>
+    <button type="button" class="btn-card-delete" title="حذف هذا العنصر">🗑️</button>
+  `;
+  actionsWrap.querySelector('.btn-card-edit').onclick = (e) => {
+    e.stopPropagation();
+    LingoAdmin.openEditModal(category, realIndex);
+  };
+  actionsWrap.querySelector('.btn-card-delete').onclick = (e) => {
+    e.stopPropagation();
+    LingoAdmin.deleteItem(category, realIndex);
+  };
+  card.appendChild(actionsWrap);
+}
 
 // ==========================================================================
 // 1. Audio Synthesizer (Web Audio API - No external audio files needed!)
@@ -369,7 +401,7 @@ function renderAlphabet() {
   if (!container) return;
   container.innerHTML = '';
 
-  ALPHABET_DATA.forEach(item => {
+  ALPHABET_DATA.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'alpha-card';
     card.innerHTML = `
@@ -379,10 +411,15 @@ function renderAlphabet() {
       <div class="alpha-ar">${item.arabic}</div>
     `;
     card.onclick = () => {
+      if (quickEditMode) {
+        LingoAdmin.openEditModal('alphabet', index);
+        return;
+      }
       playPopSound();
       speakWord(`${item.letter}. ${item.word}!`);
       addStars(1);
     };
+    attachCardAdminActions(card, 'alphabet', index);
     container.appendChild(card);
   });
 }
@@ -393,10 +430,11 @@ function renderNumbers() {
   if (!container) return;
   container.innerHTML = '';
 
-  NUMBERS_DATA.forEach(item => {
+  NUMBERS_DATA.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'num-card';
-    const itemsPreview = item.emoji.repeat(Math.min(item.count, 6)) + (item.count > 6 ? '...' : '');
+    const countVal = item.count !== undefined ? item.count : (item.num || 1);
+    const itemsPreview = item.emoji.repeat(Math.min(countVal, 6)) + (countVal > 6 ? '...' : '');
     card.innerHTML = `
       <div class="num-digit">${item.num}</div>
       <div class="num-word">${item.word}</div>
@@ -404,10 +442,15 @@ function renderNumbers() {
       <div class="num-items">${itemsPreview}</div>
     `;
     card.onclick = () => {
+      if (quickEditMode) {
+        LingoAdmin.openEditModal('numbers', index);
+        return;
+      }
       playPopSound();
       speakWord(`${item.num}. ${item.word}!`);
       addStars(1);
     };
+    attachCardAdminActions(card, 'numbers', index);
     container.appendChild(card);
   });
 }
@@ -418,10 +461,10 @@ function renderAnimals() {
   if (!container) return;
   container.innerHTML = '';
 
-  ANIMALS_DATA.forEach(item => {
+  ANIMALS_DATA.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'item-card';
-    card.style.backgroundColor = item.bg;
+    card.style.backgroundColor = item.bg || '#FFF';
     card.innerHTML = `
       <span class="item-emoji">${item.emoji}</span>
       <div class="item-word">${item.word}</div>
@@ -429,10 +472,15 @@ function renderAnimals() {
       <span class="item-tag">${item.category}</span>
     `;
     card.onclick = () => {
+      if (quickEditMode) {
+        LingoAdmin.openEditModal('animals', index);
+        return;
+      }
       playPopSound();
-      speakWord(`${item.word}! ${item.sound}`);
+      speakWord(`${item.word}! ${item.sound || ''}`);
       addStars(1);
     };
+    attachCardAdminActions(card, 'animals', index);
     container.appendChild(card);
   });
 }
@@ -442,20 +490,25 @@ function renderColorsAndShapes() {
   const colContainer = document.getElementById('colorsGrid');
   if (colContainer) {
     colContainer.innerHTML = '';
-    COLORS_DATA.forEach(item => {
+    COLORS_DATA.forEach((item, index) => {
       const card = document.createElement('div');
       card.className = 'item-card';
       card.innerHTML = `
         <div style="width: 60px; height: 60px; border-radius: 50%; background-color: ${item.hex}; border: 3px solid #FFF; box-shadow: 0 4px 8px rgba(0,0,0,0.15); margin: 0 auto 0.75rem;"></div>
         <div class="item-word">${item.word}</div>
         <div class="item-ar">${item.arabic}</div>
-        <div style="font-size: 0.8rem; color: #64748B; margin-top: 0.3rem;">${item.example}</div>
+        <div style="font-size: 0.8rem; color: #64748B; margin-top: 0.3rem;">${item.example || ''}</div>
       `;
       card.onclick = () => {
+        if (quickEditMode) {
+          LingoAdmin.openEditModal('colors', index);
+          return;
+        }
         playPopSound();
-        speakWord(`${item.word}! ${item.example}`);
+        speakWord(`${item.word}! ${item.example || ''}`);
         addStars(1);
       };
+      attachCardAdminActions(card, 'colors', index);
       colContainer.appendChild(card);
     });
   }
@@ -463,19 +516,25 @@ function renderColorsAndShapes() {
   const shpContainer = document.getElementById('shapesGrid');
   if (shpContainer) {
     shpContainer.innerHTML = '';
-    SHAPES_DATA.forEach(item => {
+    SHAPES_DATA.forEach((item, index) => {
       const card = document.createElement('div');
       card.className = 'item-card';
       card.innerHTML = `
         <span class="item-emoji">${item.emoji}</span>
         <div class="item-word">${item.word}</div>
         <div class="item-ar">${item.arabic}</div>
+        <div style="font-size: 0.8rem; color: #64748B; margin-top: 0.3rem;">${item.desc || ''}</div>
       `;
       card.onclick = () => {
+        if (quickEditMode) {
+          LingoAdmin.openEditModal('shapes', index);
+          return;
+        }
         playPopSound();
         speakWord(`${item.word}!`);
         addStars(1);
       };
+      attachCardAdminActions(card, 'shapes', index);
       shpContainer.appendChild(card);
     });
   }
@@ -487,7 +546,7 @@ function renderFruits() {
   if (!container) return;
   container.innerHTML = '';
 
-  FRUITS_DATA.forEach(item => {
+  FRUITS_DATA.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'item-card';
     card.innerHTML = `
@@ -496,10 +555,15 @@ function renderFruits() {
       <div class="item-ar">${item.arabic}</div>
     `;
     card.onclick = () => {
+      if (quickEditMode) {
+        LingoAdmin.openEditModal('fruits', index);
+        return;
+      }
       playPopSound();
       speakWord(`${item.word}! Delicious!`);
       addStars(1);
     };
+    attachCardAdminActions(card, 'fruits', index);
     container.appendChild(card);
   });
 }
@@ -526,14 +590,21 @@ function switchGameMode(mode) {
 }
 
 // Game 1: Listen & Pick Quiz
-const QUIZ_POOL = [
-  ...ANIMALS_DATA.map(a => ({ word: a.word, arabic: a.arabic, emoji: a.emoji })),
-  ...FRUITS_DATA.map(f => ({ word: f.word, arabic: f.arabic, emoji: f.emoji })),
-  ...ALPHABET_DATA.slice(0, 10).map(l => ({ word: l.word, arabic: l.arabic, emoji: l.emoji }))
-];
+function getQuizPool() {
+  const pool = [];
+  if (Array.isArray(ANIMALS_DATA)) ANIMALS_DATA.forEach(a => pool.push({ word: a.word, arabic: a.arabic, emoji: a.emoji }));
+  if (Array.isArray(FRUITS_DATA)) FRUITS_DATA.forEach(f => pool.push({ word: f.word, arabic: f.arabic, emoji: f.emoji }));
+  if (Array.isArray(ALPHABET_DATA)) ALPHABET_DATA.forEach(l => pool.push({ word: l.word, arabic: l.arabic, emoji: l.emoji }));
+  return pool.length >= 4 ? pool : [
+    { word: 'Apple', arabic: 'تفاحة', emoji: '🍎' },
+    { word: 'Cat', arabic: 'قطة', emoji: '🐱' },
+    { word: 'Dog', arabic: 'كلب', emoji: '🐶' },
+    { word: 'Sun', arabic: 'شمس', emoji: '☀️' }
+  ];
+}
 
 function startQuizGame() {
-  const pool = [...QUIZ_POOL].sort(() => 0.5 - Math.random());
+  const pool = getQuizPool().sort(() => 0.5 - Math.random());
   currentQuizQuestion = pool[0];
 
   const options = [currentQuizQuestion, pool[1], pool[2], pool[3]].sort(() => 0.5 - Math.random());
@@ -772,8 +843,6 @@ function openCertificateFromCeleb() {
 // ==========================================================================
 // 6. Daily Phrases World Module
 // ==========================================================================
-let currentPhraseFilter = 'all';
-
 function renderPhrases(filter = 'all') {
   currentPhraseFilter = filter;
   const container = document.getElementById('phrasesGrid');
@@ -785,30 +854,36 @@ function renderPhrases(filter = 'all') {
     : DAILY_PHRASES_DATA.filter(item => item.category === filter);
 
   filtered.forEach(item => {
+    const realIndex = DAILY_PHRASES_DATA.indexOf(item);
     const card = document.createElement('div');
     card.className = 'phrase-card';
-    card.style.borderTop = `6px solid ${item.color}`;
+    card.style.borderTop = `6px solid ${item.color || '#3A86FF'}`;
     card.innerHTML = `
       <div class="phrase-top-row">
-        <span class="phrase-tag-badge" style="color: ${item.color}; background: ${item.color}15;">${item.categoryAr}</span>
+        <span class="phrase-tag-badge" style="color: ${item.color || '#3A86FF'}; background: ${item.color || '#3A86FF'}15;">${item.categoryAr || item.category}</span>
         <span class="phrase-emoji-box">${item.emoji}</span>
       </div>
       <div class="phrase-content-box">
         <div class="phrase-english-text">${item.phrase}</div>
-        <div class="phrase-pronounce-text">نطق: ${item.pronunciation}</div>
+        <div class="phrase-pronounce-text">نطق: ${item.pronunciation || ''}</div>
         <div class="phrase-arabic-text">${item.arabic}</div>
       </div>
-      <button type="button" class="phrase-audio-btn" style="background: linear-gradient(135deg, ${item.color}, #0F172A);" title="استمع وكرر">
+      <button type="button" class="phrase-audio-btn" style="background: linear-gradient(135deg, ${item.color || '#3A86FF'}, #0F172A);" title="استمع وكرر">
         <span>🔊</span> استمع وردد
       </button>
     `;
 
     card.onclick = () => {
+      if (quickEditMode) {
+        LingoAdmin.openEditModal('phrases', realIndex);
+        return;
+      }
       playPopSound();
       speakWord(item.phrase, 0.82);
       addStars(1);
     };
 
+    attachCardAdminActions(card, 'phrases', realIndex);
     container.appendChild(card);
   });
 }
@@ -1192,9 +1267,16 @@ function renderVideos(filter = 'all') {
     : VIDEOS_DATA.filter(v => v.category === filter);
 
   list.forEach(video => {
+    const realIndex = VIDEOS_DATA.indexOf(video);
     const card = document.createElement('div');
     card.className = 'video-card';
-    card.onclick = () => openVideoPlayer(video.id, video.titleAr);
+    card.onclick = () => {
+      if (quickEditMode) {
+        LingoAdmin.openEditModal('videos', realIndex);
+        return;
+      }
+      openVideoPlayer(video.id, video.titleAr);
+    };
 
     // Official YouTube High-Resolution thumbnail
     const thumbUrl = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
@@ -1203,22 +1285,23 @@ function renderVideos(filter = 'all') {
       <div class="video-thumb-container">
         <img class="video-thumb-img" src="${thumbUrl}" alt="${video.titleEn}" loading="lazy">
         <div class="video-play-badge">▶</div>
-        <div class="video-duration-pill">⏱ ${video.duration}</div>
+        <div class="video-duration-pill">⏱ ${video.duration || '2:30'}</div>
       </div>
       <div class="video-card-body">
         <div class="video-card-top-tag">
-          <span class="video-category-tag">${video.categoryAr}</span>
-          <span style="font-size: 1.5rem;">${video.emoji}</span>
+          <span class="video-category-tag">${video.categoryAr || video.category}</span>
+          <span style="font-size: 1.5rem;">${video.emoji || '🎬'}</span>
         </div>
         <h4 class="video-card-title-ar">${video.titleAr}</h4>
         <div class="video-card-title-en">${video.titleEn}</div>
-        <p class="video-card-desc">${video.desc}</p>
+        <p class="video-card-desc">${video.desc || ''}</p>
         <button type="button" class="video-watch-btn">
           <span>🍿</span> شاهد وتعلّم (+5 ⭐)
         </button>
       </div>
     `;
 
+    attachCardAdminActions(card, 'videos', realIndex);
     container.appendChild(card);
   });
 }
@@ -1264,7 +1347,492 @@ function closeVideoPlayer() {
 }
 
 // ==========================================================================
-// 11. Initialize Everything on DOMContentLoaded
+// 11. Content Management System & Full Control Engine (LingoAdmin)
+// لوحة تحكم وإدارة المحتوى الشاملة: إضافة، تعديل، حذف، نسخ احتياطي واستعادة
+// ==========================================================================
+const LingoAdmin = {
+  currentCategory: 'alphabet',
+  quickEditMode: false,
+  searchTerm: '',
+
+  openPanel(category = null) {
+    playPopSound();
+    if (category && typeof CATEGORIES_META !== 'undefined' && CATEGORIES_META[category]) {
+      this.currentCategory = category;
+    }
+    const modal = document.getElementById('adminPanelModal');
+    if (modal) modal.classList.add('open');
+    this.renderCategoryTabs();
+    this.renderAdminTable();
+  },
+
+  closePanel() {
+    playPopSound();
+    const modal = document.getElementById('adminPanelModal');
+    if (modal) modal.classList.remove('open');
+  },
+
+  renderCategoryTabs() {
+    const container = document.getElementById('adminCategoryTabs');
+    if (!container || typeof CATEGORIES_META === 'undefined') return;
+    container.innerHTML = '';
+
+    Object.keys(CATEGORIES_META).forEach(catKey => {
+      const meta = CATEGORIES_META[catKey];
+      const count = meta.getData().length;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `admin-tab-btn ${catKey === this.currentCategory ? 'active' : ''}`;
+      btn.innerHTML = `<span>${meta.emoji}</span> <span>${meta.nameAr}</span> <small class="tab-count">${count}</small>`;
+      btn.onclick = () => {
+        playPopSound();
+        this.currentCategory = catKey;
+        this.renderCategoryTabs();
+        this.renderAdminTable();
+      };
+      container.appendChild(btn);
+    });
+  },
+
+  filterTable() {
+    const input = document.getElementById('adminSearchInput');
+    this.searchTerm = input ? input.value.trim().toLowerCase() : '';
+    this.renderAdminTable();
+  },
+
+  renderAdminTable() {
+    const tbody = document.getElementById('adminTableBody');
+    const emptyState = document.getElementById('adminEmptyState');
+    if (!tbody || typeof CATEGORIES_META === 'undefined') return;
+    tbody.innerHTML = '';
+
+    const meta = CATEGORIES_META[this.currentCategory];
+    if (!meta) return;
+
+    let items = meta.getData();
+    if (this.searchTerm) {
+      items = items.filter(item => {
+        const text = JSON.stringify(item).toLowerCase();
+        return text.includes(this.searchTerm);
+      });
+    }
+
+    if (items.length === 0) {
+      if (emptyState) emptyState.style.display = 'block';
+      return;
+    } else {
+      if (emptyState) emptyState.style.display = 'none';
+    }
+
+    const fullData = meta.getData();
+    items.forEach(item => {
+      const realIndex = fullData.indexOf(item);
+      const tr = document.createElement('tr');
+
+      // 1. Emoji / Icon
+      const emojiCol = item.emoji || (item.hex ? '🎨' : '📝');
+      
+      // 2. English primary
+      const enText = item.word || item.phrase || item.titleEn || item.letter || '';
+      
+      // 3. Arabic
+      const arText = item.arabic || item.titleAr || '';
+
+      // 4. Details
+      let details = '';
+      if (this.currentCategory === 'alphabet') details = `${item.small ? `(${item.small}) ` : ''}${item.phonics || ''}`;
+      else if (this.currentCategory === 'numbers') details = `العدد: ${item.count !== undefined ? item.count : item.num}`;
+      else if (this.currentCategory === 'animals') details = `${item.category} • ${item.sound || ''}`;
+      else if (this.currentCategory === 'colors') details = `<span class="color-dot" style="background:${item.hex}"></span> ${item.example || item.hex}`;
+      else if (this.currentCategory === 'shapes') details = item.desc || '';
+      else if (this.currentCategory === 'fruits') details = item.color || '';
+      else if (this.currentCategory === 'phrases') details = `<span class="phrase-cat-tag">${item.category}</span> ${item.pronunciation ? `[${item.pronunciation}]` : ''}`;
+      else if (this.currentCategory === 'videos') details = `${item.categoryAr || item.category} • ${item.duration || '2:30'}`;
+      else if (this.currentCategory === 'spelling') details = item.hint || '';
+
+      const speakTarget = enText;
+
+      tr.innerHTML = `
+        <td style="text-align: center; font-size: 1.5rem;">${emojiCol}</td>
+        <td><strong>${enText}</strong></td>
+        <td>${arText}</td>
+        <td style="font-size: 0.88rem; color: #64748B;">${details}</td>
+        <td style="text-align: center;">
+          <button type="button" class="btn-table-speech" title="استمع للنطق">🔊</button>
+        </td>
+        <td style="text-align: center;">
+          <div class="table-actions-cell">
+            <button type="button" class="btn-table-edit" title="تعديل هذا العنصر">✏️</button>
+            <button type="button" class="btn-table-delete" title="حذف هذا العنصر">🗑️</button>
+          </div>
+        </td>
+      `;
+
+      tr.querySelector('.btn-table-speech').onclick = () => {
+        playPopSound();
+        speakWord(speakTarget);
+      };
+      tr.querySelector('.btn-table-edit').onclick = () => {
+        this.openEditModal(this.currentCategory, realIndex);
+      };
+      tr.querySelector('.btn-table-delete').onclick = () => {
+        this.deleteItem(this.currentCategory, realIndex);
+      };
+
+      tbody.appendChild(tr);
+    });
+  },
+
+  openAddModal(category = null) {
+    playPopSound();
+    const cat = category || this.currentCategory;
+    this.currentCategory = cat;
+    const meta = CATEGORIES_META[cat];
+    if (!meta) return;
+
+    document.getElementById('adminItemCategory').value = cat;
+    document.getElementById('adminItemIndex').value = '-1';
+    document.getElementById('adminItemModalTitle').innerText = `➕ إضافة عنصر جديد إلى (${meta.nameAr})`;
+    document.getElementById('adminItemModalSubtitle').innerText = `أدخل تفاصيل العنصر الجديد ليظهر فوراً للأطفال مع النطق الصوتي`;
+    document.getElementById('adminItemHeaderIcon').innerText = meta.emoji;
+
+    this.renderFormFields(cat, null);
+    const modal = document.getElementById('adminItemModal');
+    if (modal) modal.classList.add('open');
+  },
+
+  openEditModal(category, index) {
+    playPopSound();
+    this.currentCategory = category;
+    const meta = CATEGORIES_META[category];
+    if (!meta) return;
+
+    const data = meta.getData();
+    const item = data[index];
+    if (!item) return;
+
+    document.getElementById('adminItemCategory').value = category;
+    document.getElementById('adminItemIndex').value = index.toString();
+    document.getElementById('adminItemModalTitle').innerText = `✏️ تعديل عنصر في (${meta.nameAr})`;
+    document.getElementById('adminItemModalSubtitle').innerText = `عدّل البيانات ثم اضغط حفظ لتحديث البطاقة والنطق فوراً`;
+    document.getElementById('adminItemHeaderIcon').innerText = meta.emoji;
+
+    this.renderFormFields(category, item);
+    const modal = document.getElementById('adminItemModal');
+    if (modal) modal.classList.add('open');
+  },
+
+  closeItemModal() {
+    playPopSound();
+    const modal = document.getElementById('adminItemModal');
+    if (modal) modal.classList.remove('open');
+  },
+
+  renderFormFields(category, item = null) {
+    const grid = document.getElementById('adminFormGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const meta = CATEGORIES_META[category];
+    if (!meta) return;
+
+    meta.fields.forEach(f => {
+      const fieldWrapper = document.createElement('div');
+      fieldWrapper.className = `form-field-group ${f.width === 'full' ? 'field-full' : 'field-half'}`;
+
+      const label = document.createElement('label');
+      label.setAttribute('for', `field_${f.id}`);
+      label.innerText = f.label + (f.required ? ' *' : '');
+      fieldWrapper.appendChild(label);
+
+      let currentVal = item ? (item[f.id] !== undefined ? item[f.id] : '') : (f.default !== undefined ? f.default : '');
+
+      if (f.type === 'select') {
+        const select = document.createElement('select');
+        select.id = `field_${f.id}`;
+        select.name = f.id;
+        f.options.forEach(opt => {
+          const optEl = document.createElement('option');
+          if (typeof opt === 'string') {
+            optEl.value = opt;
+            optEl.innerText = opt;
+          } else {
+            optEl.value = opt.val;
+            optEl.innerText = opt.label;
+          }
+          if (optEl.value === currentVal) optEl.selected = true;
+          select.appendChild(optEl);
+        });
+        fieldWrapper.appendChild(select);
+      } else if (f.type === 'color') {
+        const colorWrap = document.createElement('div');
+        colorWrap.className = 'color-picker-input-wrap';
+        const colorInput = document.createElement('input');
+        colorInput.type = 'color';
+        colorInput.id = `field_${f.id}`;
+        colorInput.name = f.id;
+        colorInput.value = currentVal || '#3A86FF';
+
+        const textInput = document.createElement('input');
+        textInput.type = 'text';
+        textInput.value = colorInput.value;
+        textInput.style.maxWidth = '120px';
+        textInput.style.direction = 'ltr';
+
+        colorInput.oninput = () => { textInput.value = colorInput.value; };
+        textInput.oninput = () => { colorInput.value = textInput.value; };
+
+        colorWrap.appendChild(colorInput);
+        colorWrap.appendChild(textInput);
+        fieldWrapper.appendChild(colorWrap);
+      } else {
+        const input = document.createElement('input');
+        input.type = f.type || 'text';
+        input.id = `field_${f.id}`;
+        input.name = f.id;
+        input.placeholder = f.placeholder || '';
+        input.value = currentVal;
+        if (f.required) input.required = true;
+        fieldWrapper.appendChild(input);
+      }
+
+      grid.appendChild(fieldWrapper);
+    });
+  },
+
+  testCurrentFormSpeech() {
+    playPopSound();
+    const wordInput = document.getElementById('field_word') ||
+                      document.getElementById('field_phrase') ||
+                      document.getElementById('field_titleEn') ||
+                      document.getElementById('field_letter');
+    if (wordInput && wordInput.value.trim()) {
+      speakWord(wordInput.value.trim());
+    } else {
+      speakWord('Hello! Ready to learn!');
+    }
+  },
+
+  saveItem() {
+    const cat = document.getElementById('adminItemCategory').value;
+    const indexStr = document.getElementById('adminItemIndex').value;
+    const index = parseInt(indexStr, 10);
+    const meta = CATEGORIES_META[cat];
+    if (!meta) return;
+
+    const newItem = {};
+    meta.fields.forEach(f => {
+      const el = document.getElementById(`field_${f.id}`);
+      if (el) {
+        let val = el.value.trim();
+        if (f.type === 'number') {
+          val = parseInt(val, 10) || 0;
+        }
+        if (cat === 'videos' && f.id === 'id') {
+          val = extractYouTubeId(val);
+        }
+        newItem[f.id] = val;
+      }
+    });
+
+    // Special category enhancements
+    if (cat === 'phrases' && !newItem.categoryAr) {
+      const catMap = {
+        greetings: 'التحيات والوداع',
+        manners: 'الكلمات السحرية',
+        feelings: 'المشاعر والأحوال',
+        conversation: 'التعارف والأسئلة'
+      };
+      newItem.categoryAr = catMap[newItem.category] || 'عبارات يومية';
+    }
+
+    if (cat === 'videos') {
+      const catMap = {
+        alphabet: 'الحروف الهجائية 🔤',
+        numbers: 'الأرقام والعد 🔢',
+        colors: 'الألوان والأشكال 🎨',
+        animals: 'مملكة الحيوانات 🦁',
+        phrases: 'العبارات والتحيات 💬'
+      };
+      newItem.categoryAr = catMap[newItem.category] || 'فيديوهات تعليمية';
+    }
+
+    const data = [...meta.getData()];
+    if (index >= 0 && index < data.length) {
+      // Edit existing
+      data[index] = newItem;
+      this.showToast('✅ تم حفظ التعديلات بنجاح!', 'success');
+    } else {
+      // Add new
+      data.push(newItem);
+      this.showToast('🎉 تم إضافة العنصر الجديد بنجاح!', 'success');
+    }
+
+    meta.setData(data);
+    this.closeItemModal();
+    this.renderCategoryTabs();
+    this.renderAdminTable();
+    this.refreshCurrentViews();
+    playCorrectSound();
+    addStars(2);
+  },
+
+  deleteItem(category, index) {
+    const meta = CATEGORIES_META[category];
+    if (!meta) return;
+    const data = [...meta.getData()];
+    const item = data[index];
+    if (!item) return;
+
+    const title = item.word || item.phrase || item.titleAr || item.letter || 'هذا العنصر';
+    const confirmDelete = window.confirm(`هل أنت متأكد من رغبتك في حذف: "${title}"؟\nيمكنك دائماً استعادة المحتوى الافتراضي في أي وقت.`);
+    if (!confirmDelete) return;
+
+    data.splice(index, 1);
+    meta.setData(data);
+    this.showToast(`🗑️ تم حذف "${title}" بنجاح`, 'info');
+    playPopSound();
+
+    this.renderCategoryTabs();
+    this.renderAdminTable();
+    this.refreshCurrentViews();
+  },
+
+  resetCurrentCategory() {
+    const meta = CATEGORIES_META[this.currentCategory];
+    if (!meta) return;
+
+    const confirmReset = window.confirm(`هل تريد استعادة جميع عناصر قسم (${meta.nameAr}) للوضع الأصلي الافتراضي؟`);
+    if (!confirmReset) return;
+
+    const defaults = meta.getDefaults();
+    meta.setData(JSON.parse(JSON.stringify(defaults)));
+    this.showToast(`🔄 تم استعادة الوضع الافتراضي لقسم ${meta.nameAr}!`, 'success');
+    playFanfareSound();
+
+    this.renderCategoryTabs();
+    this.renderAdminTable();
+    this.refreshCurrentViews();
+  },
+
+  resetAllCategories() {
+    const confirmAll = window.confirm('⚠️ تحذير: هل أنت متأكد من رغبتك في استعادة محتوى كافة أقسام المنصة إلى الحالة التأسيسية الأصلية؟');
+    if (!confirmAll) return;
+
+    Object.keys(CATEGORIES_META).forEach(key => {
+      const meta = CATEGORIES_META[key];
+      meta.setData(JSON.parse(JSON.stringify(meta.getDefaults())));
+    });
+
+    this.showToast('🌟 تم استعادة كافة أقسام المنصة للحالة الأصلية بنجاح!', 'success');
+    playFanfareSound();
+
+    this.renderCategoryTabs();
+    this.renderAdminTable();
+    this.refreshCurrentViews();
+  },
+
+  exportBackup() {
+    playPopSound();
+    const backupData = {
+      app: 'LINGOBEE',
+      version: '2.0',
+      exportedAt: new Date().toISOString(),
+      content: {}
+    };
+
+    Object.keys(CATEGORIES_META).forEach(key => {
+      backupData.content[key] = CATEGORIES_META[key].getData();
+    });
+
+    const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `lingobee_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    this.showToast('📥 تم تصدير النسخة الاحتياطية بنجاح!', 'success');
+  },
+
+  importBackup(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if (parsed.content) {
+          Object.keys(parsed.content).forEach(key => {
+            if (CATEGORIES_META[key] && Array.isArray(parsed.content[key])) {
+              CATEGORIES_META[key].setData(parsed.content[key]);
+            }
+          });
+          this.showToast('🎉 تم استيراد كافة البيانات بنجاح!', 'success');
+          playFanfareSound();
+          this.renderCategoryTabs();
+          this.renderAdminTable();
+          this.refreshCurrentViews();
+        } else {
+          alert('ملف النسخة الاحتياطية غير متوافق!');
+        }
+      } catch (err) {
+        alert('حدث خطأ أثناء قراءة الملف. تأكد من أنه ملف JSON سليم.');
+      }
+      event.target.value = '';
+    };
+    reader.readAsText(file);
+  },
+
+  toggleQuickEditMode() {
+    playPopSound();
+    this.quickEditMode = !this.quickEditMode;
+    quickEditMode = this.quickEditMode;
+
+    document.querySelectorAll('.btn-quick-edit-toggle').forEach(btn => {
+      if (this.quickEditMode) {
+        btn.classList.add('active');
+        btn.innerHTML = '✏️ وضع التعديل السريع: <span class="status-on">مفعّل ✔️</span>';
+      } else {
+        btn.classList.remove('active');
+        btn.innerHTML = '✏️ وضع التعديل السريع: <span class="status-off">معطّل</span>';
+      }
+    });
+
+    this.showToast(this.quickEditMode ? '✏️ تم تفعيل وضع التعديل السريع على البطاقات!' : '👁️ تم إيقاف وضع التعديل والعودة للوضع التعليمي', 'info');
+    this.refreshCurrentViews();
+  },
+
+  refreshCurrentViews() {
+    renderAlphabet();
+    renderNumbers();
+    renderAnimals();
+    renderColorsAndShapes();
+    renderFruits();
+    renderPhrases(currentPhraseFilter || 'all');
+    renderVideos(currentVideoFilter || 'all');
+  },
+
+  showToast(message, type = 'info') {
+    let toast = document.getElementById('lingoAdminToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'lingoAdminToast';
+      toast.className = 'admin-toast';
+      document.body.appendChild(toast);
+    }
+    toast.className = `admin-toast ${type} show`;
+    toast.innerText = message;
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3200);
+  }
+};
+
+// ==========================================================================
+// 12. Initialize Everything on DOMContentLoaded
 // ==========================================================================
 window.addEventListener('DOMContentLoaded', () => {
   const starCountEl = document.getElementById('starCounter');
