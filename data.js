@@ -169,3 +169,107 @@ const DAILY_PHRASES_DATA = [
   { phrase: 'I love English!', arabic: 'أنا أحب تعلم الإنجليزية!', emoji: '🌟', category: 'conversation', categoryAr: 'التعارف والأسئلة', color: '#FFB703', pronunciation: 'آيْ لَفْ إِنْغْلِيش' }
 ];
 
+const VIDEOS_DATA = [
+  {
+    id: 'hq3yfQnllfQ',
+    titleAr: 'أنشودة الحروف الإنجليزية اللطيفة (ABC Song)',
+    titleEn: 'ABC Song with Phonics',
+    category: 'alphabet',
+    categoryAr: 'الحروف الهجائية 🔤',
+    duration: '3:24',
+    emoji: '🔤',
+    desc: 'تعلم نطق أصوات الحروف من A إلى Z مع لحن ممتع ورسوم مبهجة'
+  },
+  {
+    id: 'FFE-TVZ37Sk',
+    titleAr: 'أنشودة كلمتين لكل حرف (Phonics Song)',
+    titleEn: 'Phonics Song with Two Words',
+    category: 'alphabet',
+    categoryAr: 'الحروف الهجائية 🔤',
+    duration: '3:50',
+    emoji: '🅰️',
+    desc: 'تعلم مفردات ونطق الحروف مع كلمتين مصورتين لكل حرف'
+  },
+  {
+    id: '0VLxWIHRD4E',
+    titleAr: 'أنشودة الأرقام والعد من 1 إلى 20',
+    titleEn: 'Numbers Song 1 to 20',
+    category: 'numbers',
+    categoryAr: 'الأرقام والعد 🔢',
+    duration: '2:45',
+    emoji: '🔢',
+    desc: 'أنشودة مبهجة لتعلم العد الإنجليزي من 1 حتى 20 بسهولة'
+  },
+  {
+    id: 'b0NHrFNZWh0',
+    titleAr: 'القردة الخمسة يقفزون على السرير',
+    titleEn: 'Five Little Monkeys Jumping on Bed',
+    category: 'numbers',
+    categoryAr: 'الأرقام والعد 🔢',
+    duration: '2:15',
+    emoji: '🐵',
+    desc: 'الأغنية الإنجليزية الأشهر لعد الأرقام باللعب والمرح'
+  },
+  {
+    id: 'SLZcWGQQsmg',
+    titleAr: 'أنشودة الألوان الجميلة للأطفال',
+    titleEn: 'Color Song for Children',
+    category: 'colors',
+    categoryAr: 'الألوان والأشكال 🎨',
+    duration: '3:12',
+    emoji: '🎨',
+    desc: 'استكشف الأحمر، الأزرق، الأخضر، والأصفر مع رسوم كرتونية ساحرة'
+  },
+  {
+    id: 'WTeqUejf3D0',
+    titleAr: 'أنشودة الأشكال الهندسية المرحة',
+    titleEn: 'The Shapes Song',
+    category: 'colors',
+    categoryAr: 'الألوان والأشكال 🎨',
+    duration: '2:50',
+    emoji: '🔺',
+    desc: 'دائرة، مربع، مثلث، ونجمة.. تعرف على أشكال العالم حولك'
+  },
+  {
+    id: '_6HzoUcx3eo',
+    titleAr: 'مزرعة ماكدونالد وأصوات الحيوانات',
+    titleEn: 'Old MacDonald Had a Farm',
+    category: 'animals',
+    categoryAr: 'مملكة الحيوانات 🦁',
+    duration: '3:05',
+    emoji: '🐮',
+    desc: 'تعرف على البقرة، الحصان، الخروف، والبطة وأصواتها بالإنجليزية'
+  },
+  {
+    id: '3v1Zkyr7-40',
+    titleAr: 'أنشودة كائنات وأسماك البحر',
+    titleEn: 'Animals in the Ocean',
+    category: 'animals',
+    categoryAr: 'مملكة الحيوانات 🦁',
+    duration: '2:35',
+    emoji: '🐬',
+    desc: 'رحلة بحرية ممتعة لاكتشاف الحوت، الدولفين، والأسماك اللطيفة'
+  },
+  {
+    id: 'tVlcKp3bWH8',
+    titleAr: 'أنشودة التحية: كيف حالك اليوم؟',
+    titleEn: 'Hello, Hello! How Are You?',
+    category: 'phrases',
+    categoryAr: 'العبارات والتحيات 💬',
+    duration: '2:10',
+    emoji: '👋',
+    desc: 'تعلم كيف تحيي أصدقاءك بالإنجليزية كل صباح بابتسامة وثقة'
+  },
+  {
+    id: 'ANChOA4SyL0',
+    titleAr: 'أنشودة الكلمات السحرية: شكراً ومن فضلك',
+    titleEn: 'Please and Thank You Song',
+    category: 'phrases',
+    categoryAr: 'العبارات والتحيات 💬',
+    duration: '2:25',
+    emoji: '🙏',
+    desc: 'تعلم أهم عبارات الأدب واللطف باللغة الإنجليزية في حياتنا اليومية'
+  }
+];
+
+

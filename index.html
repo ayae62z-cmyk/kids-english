@@ -34,6 +34,11 @@
           <span id="starCounter">10</span>
         </div>
 
+        <!-- Sound Test Button -->
+        <button type="button" class="btn-sound-test" id="soundTestBtn" onclick="testSoundWithVoice()" title="انقر لتجربة الصوت وسماعه">
+          🔊 جرّب الصوت
+        </button>
+
         <!-- Sound Toggle -->
         <button type="button" class="btn-icon" id="soundToggleBtn" onclick="toggleSound()" title="تشغيل / كتم الصوت">
           🔊
@@ -67,6 +72,9 @@
       <button class="nav-pill cyan" data-view="phrases" onclick="switchView('phrases')">
         <span>💬</span> عبارات يومية
       </button>
+      <button class="nav-pill red" data-view="videos" onclick="switchView('videos')">
+        <span>🎬</span> فيديوهات تعليمية
+      </button>
       <button class="nav-pill" style="background: #F43F5E; color: #fff; box-shadow: 0 4px 0 #9F1239;" data-view="games" onclick="switchView('games')">
         <span>🎮</span> ألعاب وتحديات
       </button>
@@ -75,6 +83,19 @@
       </button>
     </div>
   </nav>
+
+  <!-- Audio Advisory Notice Bar -->
+  <div class="audio-notice-bar" id="audioNoticeBar">
+    <div class="audio-notice-inner">
+      <span class="notice-icon">🔊</span>
+      <div class="notice-text">
+        <strong>لا تسمع صوتاً على هاتفك؟</strong>
+        تأكد من إلغاء وضع الصامت (مفتاح الرنين الجانبي للآيفون 🔕) ورفع الصوت، ثم 
+        <button type="button" class="notice-link-btn" onclick="testSoundWithVoice()">اضغط هنا لتفعيل وتجربة الصوت فوراً 🎵</button>
+      </div>
+      <button type="button" class="btn-close-notice" onclick="document.getElementById('audioNoticeBar').style.display='none'" title="إغلاق">✕</button>
+    </div>
+  </div>
 
   <!-- Main Content -->
   <main class="main-content">
@@ -186,6 +207,18 @@
           </div>
         </div>
 
+        <!-- Educational Videos Card -->
+        <div class="world-card c-videos" onclick="switchView('videos')">
+          <div class="world-top">
+            <span class="world-badge" style="background: #FFE4E6; color: #E11D48;">سينما الأطفال 🎬</span>
+            <div class="world-emoji">🍿</div>
+          </div>
+          <div class="world-bottom">
+            <h3>سينما الفيديوهات التعليمية (Videos)</h3>
+            <p>أناشيد ورسوم متحركة ممتعة لتعلم الحروف، الأرقام والمحادثات بالصوت والصورة!</p>
+          </div>
+        </div>
+
         <!-- Certificate Card -->
         <div class="world-card c-cert" onclick="openCertificateModal()">
           <div class="world-top">
@@ -284,6 +317,28 @@
       </div>
 
       <div class="phrases-grid" id="phrasesGrid"></div>
+    </section>
+
+    <!-- ====================================================================
+         View: Educational Videos Hub (سينما الفيديوهات التعليمية)
+         ==================================================================== -->
+    <section class="view-section" id="view-videos">
+      <div class="section-banner">
+        <h2>🎬 سينما لنجوبي التعليمية (LingoBee Cinema)</h2>
+        <p>شاهد أروع الأناشيد والرسوم المتحركة لتعلم الإنجليزية واكسب +5 ⭐ نجوم مع كل فيديو تشاهده! 🍿</p>
+      </div>
+
+      <!-- Video Filter Pills -->
+      <div class="videos-filter-bar">
+        <button type="button" class="filter-pill active" onclick="filterVideos('all', this)">✨ الكل (All)</button>
+        <button type="button" class="filter-pill" onclick="filterVideos('alphabet', this)">🔤 الحروف الهجائية</button>
+        <button type="button" class="filter-pill" onclick="filterVideos('numbers', this)">🔢 الأرقام والعد</button>
+        <button type="button" class="filter-pill" onclick="filterVideos('colors', this)">🎨 الألوان والأشكال</button>
+        <button type="button" class="filter-pill" onclick="filterVideos('animals', this)">🦁 الحيوانات</button>
+        <button type="button" class="filter-pill" onclick="filterVideos('phrases', this)">💬 المحادثات والتحيات</button>
+      </div>
+
+      <div class="videos-grid" id="videosGrid"></div>
     </section>
 
     <!-- ====================================================================
@@ -536,6 +591,32 @@
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Video Player Modal -->
+  <div class="modal-overlay video-modal-overlay" id="videoModalOverlay" onclick="closeVideoPlayer()">
+    <div class="video-modal-dialog" onclick="event.stopPropagation()">
+      <div class="video-modal-header">
+        <div class="video-modal-title">
+          <span>🎬</span>
+          <h3 id="videoModalTitle">عنوان الفيديو التعليمي</h3>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeVideoPlayer()">✕</button>
+      </div>
+
+      <div class="video-player-frame-wrapper" id="videoFrameWrapper">
+        <!-- Video iframe injected dynamically -->
+      </div>
+
+      <div class="video-modal-footer">
+        <div class="video-reward-badge">
+          <span>⭐</span> كسبت <strong>+5 نجوم</strong> لمشاهدتك الفيديو التعليمي!
+        </div>
+        <button type="button" class="btn-primary-fun" onclick="closeVideoPlayer()">
+          العودة للسينما والمتابعة 🚀
+        </button>
+      </div>
     </div>
   </div>
 

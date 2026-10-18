@@ -115,14 +115,63 @@ function playFanfareSound() {
 }
 
 // ==========================================================================
-// 2. Speech Synthesis (Clear English Native Voice)
+// 2. Dual-Engine Speech Synthesis & Universal Audio Fallback
 // ==========================================================================
 let englishVoice = null;
+window._activeUtterances = [];
+let audioUnlocked = false;
+let fallbackAudioEl = null;
+
+function getFallbackAudio() {
+  if (!fallbackAudioEl) {
+    fallbackAudioEl = new Audio();
+    fallbackAudioEl.crossOrigin = "anonymous";
+  }
+  return fallbackAudioEl;
+}
+
+// Unlock audio on iOS, Android, and WebViews on the very first touch/click
+function unlockAudioEngine() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+
+  // 1. Web Audio Context Unlock
+  try {
+    const ctx = getAudioCtx();
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume();
+    }
+    const buf = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+  } catch (e) {}
+
+  // 2. Speech Synthesis Warmup (crucial for iOS Safari)
+  try {
+    if ('speechSynthesis' in window && window.speechSynthesis) {
+      const u = new SpeechSynthesisUtterance('');
+      window.speechSynthesis.speak(u);
+    }
+  } catch (e) {}
+
+  // 3. HTML5 Audio Warmup
+  try {
+    const a = getFallbackAudio();
+    a.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+    a.play().catch(() => {});
+  } catch (e) {}
+}
+
+window.addEventListener('click', unlockAudioEngine, { passive: true });
+window.addEventListener('touchstart', unlockAudioEngine, { passive: true });
+window.addEventListener('pointerdown', unlockAudioEngine, { passive: true });
 
 function loadVoices() {
-  if (!('speechSynthesis' in window)) return;
-  const voices = window.speechSynthesis.getVoices();
-  englishVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha'))) ||
+  if (!('speechSynthesis' in window) || !window.speechSynthesis) return;
+  const voices = window.speechSynthesis.getVoices() || [];
+  englishVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Daniel') || v.name.includes('Ava') || v.name.includes('Zira'))) ||
                  voices.find(v => v.lang === 'en-US') ||
                  voices.find(v => v.lang.startsWith('en')) || null;
 }
@@ -132,19 +181,131 @@ if ('speechSynthesis' in window) {
   loadVoices();
 }
 
-function speakWord(text, rate = 0.9, pitch = 1.1) {
-  if (!('speechSynthesis' in window) || !soundEnabled) return;
-  window.speechSynthesis.cancel();
+// Clean text for audio TTS (removes emojis and special chars)
+function cleanTextForAudio(text) {
+  return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+             .replace(/[!?,.:;]/g, ' ')
+             .replace(/\s+/g, ' ')
+             .trim();
+}
 
-  const utterance = new SpeechSynthesisUtterance(text);
-  if (englishVoice) {
-    utterance.voice = englishVoice;
+// Universal Audio Fallback (works in WhatsApp WebView and on all phones)
+function speakWithAudioFallback(text) {
+  if (!soundEnabled) return;
+  try {
+    const clean = cleanTextForAudio(text);
+    if (!clean) return;
+
+    const audio = getFallbackAudio();
+    audio.pause();
+    
+    // High quality native US English pronunciation dictionary stream
+    audio.src = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(clean)}&type=2`;
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Backup Google TTS stream
+        audio.src = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(clean)}`;
+        audio.play().catch(e => console.warn('Audio stream fallback failed:', e));
+      });
+    }
+  } catch (err) {
+    console.warn('Fallback audio failed:', err);
   }
-  utterance.lang = 'en-US';
-  utterance.rate = rate;
-  utterance.pitch = pitch;
+}
 
-  window.speechSynthesis.speak(utterance);
+function speakWord(text, rate = 0.9, pitch = 1.1) {
+  if (!soundEnabled) return;
+
+  unlockAudioEngine();
+
+  const hasSynth = ('speechSynthesis' in window) && window.speechSynthesis;
+
+  if (!hasSynth) {
+    // WebViews without Speech Synthesis
+    speakWithAudioFallback(text);
+    return;
+  }
+
+  try {
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
+
+    if (!englishVoice) {
+      loadVoices();
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    if (englishVoice) {
+      utterance.voice = englishVoice;
+    }
+    utterance.lang = 'en-US';
+    utterance.rate = rate;
+    utterance.pitch = pitch;
+
+    let hasStarted = false;
+
+    utterance.onstart = () => {
+      hasStarted = true;
+    };
+
+    utterance.onerror = (e) => {
+      console.warn('SpeechSynthesis error, falling back to audio stream:', e);
+      speakWithAudioFallback(text);
+    };
+
+    window._activeUtterances.push(utterance);
+    utterance.onend = () => {
+      const idx = window._activeUtterances.indexOf(utterance);
+      if (idx !== -1) window._activeUtterances.splice(idx, 1);
+    };
+
+    window.speechSynthesis.speak(utterance);
+
+    // Timeout safety net (e.g. Android with missing voice pack)
+    setTimeout(() => {
+      if (!hasStarted && window.speechSynthesis.speaking === false) {
+        speakWithAudioFallback(text);
+      }
+    }, 450);
+
+  } catch (err) {
+    console.warn('SpeechSynthesis failed, using fallback:', err);
+    speakWithAudioFallback(text);
+  }
+}
+
+// User-Facing Sound Test Function
+function testSoundWithVoice() {
+  unlockAudioEngine();
+  soundEnabled = true;
+  const toggleBtn = document.getElementById('soundToggleBtn');
+  if (toggleBtn) {
+    toggleBtn.innerHTML = '🔊';
+    toggleBtn.style.opacity = '1';
+  }
+
+  // Play pleasant arpeggio chime
+  playCorrectSound();
+
+  // Speak greeting
+  setTimeout(() => {
+    speakWord('Hello! Welcome to LingoBee!');
+  }, 250);
+
+  // Animate the button to show it worked
+  const testBtn = document.getElementById('soundTestBtn');
+  if (testBtn) {
+    testBtn.innerText = '🎵 الصوت يعمل!';
+    testBtn.style.background = '#10B981';
+    testBtn.style.color = '#FFF';
+    setTimeout(() => {
+      testBtn.innerText = '🔊 جرّب الصوت';
+      testBtn.style.background = '';
+      testBtn.style.color = '';
+    }, 2000);
+  }
 }
 
 // ==========================================================================
@@ -169,6 +330,8 @@ function switchView(viewName) {
     startQuizGame();
   } else if (viewName === 'phrases') {
     renderPhrases('all');
+  } else if (viewName === 'videos') {
+    renderVideos('all');
   }
 }
 
@@ -1014,7 +1177,94 @@ function downloadCertificateAsImage() {
 }
 
 // ==========================================================================
-// 9. Initialize Everything on DOMContentLoaded
+// 10. Educational Videos Module (سينما الفيديوهات التعليمية)
+// ==========================================================================
+let currentVideoFilter = 'all';
+
+function renderVideos(filter = 'all') {
+  currentVideoFilter = filter;
+  const container = document.getElementById('videosGrid');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const list = filter === 'all'
+    ? VIDEOS_DATA
+    : VIDEOS_DATA.filter(v => v.category === filter);
+
+  list.forEach(video => {
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.onclick = () => openVideoPlayer(video.id, video.titleAr);
+
+    // Official YouTube High-Resolution thumbnail
+    const thumbUrl = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+
+    card.innerHTML = `
+      <div class="video-thumb-container">
+        <img class="video-thumb-img" src="${thumbUrl}" alt="${video.titleEn}" loading="lazy">
+        <div class="video-play-badge">▶</div>
+        <div class="video-duration-pill">⏱ ${video.duration}</div>
+      </div>
+      <div class="video-card-body">
+        <div class="video-card-top-tag">
+          <span class="video-category-tag">${video.categoryAr}</span>
+          <span style="font-size: 1.5rem;">${video.emoji}</span>
+        </div>
+        <h4 class="video-card-title-ar">${video.titleAr}</h4>
+        <div class="video-card-title-en">${video.titleEn}</div>
+        <p class="video-card-desc">${video.desc}</p>
+        <button type="button" class="video-watch-btn">
+          <span>🍿</span> شاهد وتعلّم (+5 ⭐)
+        </button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function filterVideos(category, btnEl) {
+  playPopSound();
+  document.querySelectorAll('.videos-filter-bar .filter-pill').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  renderVideos(category);
+}
+
+function openVideoPlayer(videoId, titleAr) {
+  playPopSound();
+  const modal = document.getElementById('videoModalOverlay');
+  const titleEl = document.getElementById('videoModalTitle');
+  const wrapper = document.getElementById('videoFrameWrapper');
+
+  if (titleEl) titleEl.innerText = titleAr;
+  if (wrapper) {
+    wrapper.innerHTML = `
+      <iframe 
+        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" 
+        title="${titleAr}"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    `;
+  }
+
+  if (modal) modal.classList.add('open');
+
+  // Reward child with 5 stars for learning!
+  addStars(5);
+  playCorrectSound();
+}
+
+function closeVideoPlayer() {
+  playPopSound();
+  const modal = document.getElementById('videoModalOverlay');
+  const wrapper = document.getElementById('videoFrameWrapper');
+  if (wrapper) wrapper.innerHTML = '';
+  if (modal) modal.classList.remove('open');
+}
+
+// ==========================================================================
+// 11. Initialize Everything on DOMContentLoaded
 // ==========================================================================
 window.addEventListener('DOMContentLoaded', () => {
   const starCountEl = document.getElementById('starCounter');
@@ -1026,6 +1276,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderColorsAndShapes();
   renderFruits();
   renderPhrases('all');
+  renderVideos('all');
 
   // Format today's date for certificate
   const today = new Date();
